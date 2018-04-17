@@ -129,7 +129,7 @@ class PaperClock( object ):
         self.draw_weather_icon(
             buf,
             j['weather'][0]['icon'],
-            [10,202]
+            [15,215]
         )
 
 
@@ -138,15 +138,7 @@ class PaperClock( object ):
         caption = "%0.0f" % temp
         top_y = 194
 
-        self.draw_temp(
-            150,
-            top_y,
-            caption,
-            100,
-            60,
-            9,
-            draw
-        )
+        self.draw_temp( 150, top_y, caption, 100, 60, 9, draw )
 
         mid_y = top_y + 17
 
