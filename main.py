@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##
  #  @filename   :   main.cpp
  #  @brief      :   4.2inch e-paper display demo
@@ -24,22 +25,23 @@
  # THE SOFTWARE.
  ##
 
-from PIL import Image, ImageDraw, ImageFont
-#import imagedata
-
 import datetime
 import time
 import os
 
-import requests
+from PIL import Image, ImageDraw, ImageFont
+#import imagedata
+import babel
+import babel.dates
 
 import icons
+import weather
 
 
 EPD_WIDTH = 400
 EPD_HEIGHT = 300
 
-DEBUG_MODE = True
+DEBUG_MODE = os.environ.get( "CLOCK_DEBUG", "no" ) == "yes"
 
 
 class PaperClock( object ):
@@ -79,7 +81,7 @@ class PaperClock( object ):
         font = ImageFont.truetype('./font/AkzidenzGrotesk-Cond.otf', deg_size)
         draw.text(
             (center_x+(sz[0]/2), y+deg_offset),
-            '°',
+            u'°',
             font=font,
             fill=255
         )
@@ -98,60 +100,50 @@ class PaperClock( object ):
         )
 
 
-    def draw_weather_icon( self, buf, icon_id, pos ):
+    def draw_weather_icon( self, buf, fn_icon, pos ):
 
         fn_icon = os.path.join(
             "./icons",
-            icons.icons[icon_id]
+            fn_icon
         )
         img_icon = Image.open( fn_icon )
 
         buf.paste( img_icon, pos )
 
 
-    def update_weather( self, buf ):
+    def draw_weather( self, buf ):
 
-        r = requests.get(
-            "https://api.openweathermap.org/data/2.5/weather",
-            params={
-                "q" : "London,GB",
-                "units" : "metric",
-                "appid" : os.environ.get( "WEATHER_KEY" )
-            }
-        )
-        j=r.json()
+        w = weather.get_weather()
 
-        temp = j['main']['temp']
-        temp_min = j['main']['temp_min']
-        temp_max = j['main']['temp_max']
-
-
+        
+        icon = icons.darksky[ w.icon ]
         self.draw_weather_icon(
             buf,
-            j['weather'][0]['icon'],
+            icon,
             [15,215]
         )
 
 
         draw = ImageDraw.Draw( buf )
 
-        caption = "%0.0f" % temp
+        caption = "%0.0f" % w.temp
         top_y = 194
 
         self.draw_temp( 150, top_y, caption, 100, 60, 9, draw )
 
         mid_y = top_y + 17
 
-        caption = "%0.0f" % temp_min
+        caption = "%0.0f" % w.temp_min
         self.draw_small_temp( 250, mid_y, caption, draw )
 
-        caption = "%0.0f" % temp_max
+        caption = "%0.0f" % w.temp_max
         self.draw_small_temp( 350, mid_y, caption, draw )
 
 
     def update_for_datetime( self, dt ):
 
-        formatted = dt.strftime( '%H%M' )
+        tz_display = babel.dates.get_timezone('Europe/London')
+        formatted = babel.dates.format_time( dt, "Hmm", tzinfo=tz_display )
 
         if formatted != self._str_time:
 
@@ -161,7 +153,7 @@ class PaperClock( object ):
             img_buf.paste( self._back )
 
             # draw weather into buffer
-            self.update_weather( img_buf )
+            self.draw_weather( img_buf )
             
             im_width = 100
             offs = 0
@@ -177,54 +169,13 @@ class PaperClock( object ):
 
 
 if __name__ == '__main__':
+    
+    tz_sys = babel.dates.get_timezone( time.tzname[1] )
+
     clock = PaperClock()
     while True:
         clock.update_for_datetime(
-            datetime.datetime.now()
+            datetime.datetime.now( tz_sys )
         )
         time.sleep(0.5)
 
-
-
-def main():
-    epd = epd4in2.EPD()
-    epd.init()
-
-    # For simplicity, the arguments are explicit numerical coordinates
-    img_buf = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 1)    # 1: clear the frame
-    # draw = ImageDraw.Draw(image)
-    # font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 24)
-    # draw.rectangle((0, 6, 400, 30), fill = 0)
-    # draw.text((100, 10), 'e-Paper demo', font = font, fill = 255)
-    # draw.rectangle((200, 80, 360, 280), fill = 0)
-    # draw.arc((240, 80, 380, 220), 0, 360, fill = 255)
-    # draw.rectangle((0, 80, 160, 280), fill = 255)
-    # draw.arc((40, 80, 180, 220), 0, 360, fill = 0)
-    
-    # epd.display_frame(epd.get_frame_buffer(image))
-
-    str_time = "XXXX"
-
-    im_width = 100
-    while True:
-        dt = datetime.datetime.now()
-
-        formatted = dt.strftime( '%H%M' )
-
-        if formatted != str_time:
-            
-            offs = 0
-            for n in formatted:
-                fn = 'images/%s.bmp' % n
-                img_num = Image.open(fn)
-                img_buf.paste( img_num, (offs,0) )
-                offs += im_width
-            
-            epd.display_frame(
-                epd.get_frame_buffer( img_buf )
-            )
-
-            str_time = formatted
-
-    # You can get frame buffer from an image or import the buffer directly:
-    # epd.display_frame(imagedata.MONOCOLOR_BITMAP)
