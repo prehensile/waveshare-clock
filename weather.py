@@ -9,33 +9,40 @@ import requests
 Weather = namedtuple( 'Weather', ['temp','temp_min','temp_max','icon'] )
 
 
-def fetch_data():
-    
-    forecast_data = None
-
+def cache_path():
     pth_cache = os.path.expanduser( "~/.clock/cache/" )
     if not os.path.exists( pth_cache ):
         os.makedirs( pth_cache )
+    return os.path.join( pth_cache, "darksky.json" )
 
-    fn_cache = os.path.join( pth_cache, "darksky.json" )
+
+def load_cached():
+    
+    cached = None
+    
+    fn_cache = cache_path()
+    
     if os.path.exists(fn_cache):
         
         print( "load cache file: %s" % fn_cache )
+        with open(fn_cache) as fp:
+            return json.load(fp)
 
-        # get last modification date for cache file
-        now = time.time()
-        mtime = os.path.getmtime(fn_cache)
-        
-        # recache every 10 minutes
-        if (now - mtime) < (60*10):
-            print( "Use cached forecast")
-            with open(fn_cache) as fp:
-                forecast_data = json.load(fp)
+    return None
 
+
+def get_cache_ts():
+    fn_cache = cache_path()
+    if os.path.exists(fn_cache):
+        return os.path.getmtime(fn_cache)
+    return None
+
+
+def fetch_forecast():
+
+    print( "Get a fresh forecast from the internet...")
     
-    if forecast_data is None:
-
-        print( "Get a fresh forecast")
+    try:
         r = requests.get(
             "https://api.darksky.net/forecast/{}/{}".format(
                 os.environ.get( "DARKSKY_KEY" ),
@@ -47,18 +54,45 @@ def fetch_data():
             }
         )
         
-        forecast_data = r.json()
-        
-        # write firecast data to cache
+        # write forecast data to cache
+        fn_cache = cache_path()
         with open(fn_cache,'wb') as fp:
             fp.write( r.text.encode('utf-8') )
+
+        return r.json()
+    
+    except Exception as e:
+        print( e )
+
+    return None
+
+
+def load_forecast():
+    
+    # start from cached data 
+    forecast_data = load_cached()
+
+    # no forecast has been cached yet
+    if forecast_data is None:
+        forecast_data = fetch_forecast()
+
+    else:
+        # get last modified time for cache...
+        ts_cache = get_cache_ts()
+        
+        # refresh every 10 minutes
+        if ts_cache is not None:
+            now = time.time()
+            if (now - ts_cache) > (60*10):
+                forecast_data = fetch_forecast()        
 
     return forecast_data
 
 
 def get_weather():
 
-    forecast_data = fetch_data()        
+    forecast_data = load_forecast()        
+    
     d = forecast_data["daily"]["data"][0]
 
     temp_min = d["temperatureLow"]

@@ -1,4 +1,4 @@
-icons = {
+openweathermap = {
     "01d" : "28.bmp",
     "01n" : "29.bmp",
     "02d" : "30.bmp",
@@ -17,4 +17,17 @@ icons = {
     "13n" : "39.bmp",
     "50d" : "13.bmp",
     "50n" : "13.bmp",
+}
+
+darksky = {
+    "clear-day" : "28.bmp",
+    "clear-night" : "29.bmp",
+    "rain" : "35.bmp",
+    "snow" : "39.bmp",
+    "sleet" : "40.bmp",
+    "wind" : "6.bmp",
+    "fog" : "13.bmp",
+    "cloudy" : "41.bmp",
+    "partly-cloudy-day" : "30.bmp",
+    "partly-cloudy-night" : "31.bmp" 
 }

@@ -29,13 +29,13 @@ import datetime
 import time
 import os
 
-from PIL import Image, ImageDraw, ImageFont
+
 #import imagedata
 import babel
 import babel.dates
 
-import icons
 import weather
+import drawing
 
 
 EPD_WIDTH = 400
@@ -54,7 +54,6 @@ class PaperClock( object ):
             self._epd.init()
         
         self._str_time = "XXXX"
-        self._back = Image.open( 'images/back.bmp' )
 
 
     def display_buffer( self, buf ):
@@ -68,109 +67,31 @@ class PaperClock( object ):
         )
 
 
-    def draw_temp( self, center_x, y, temp, temp_size, deg_size, deg_offset, draw ):
-        font = ImageFont.truetype('./font/AkzidenzGrotesk-Cond.otf', temp_size)
-        sz = font.getsize( temp )
-        draw.text(
-            (center_x-(sz[0]/2), y),
-            temp,
-            font=font,
-            fill=255
-        )
-
-        font = ImageFont.truetype('./font/AkzidenzGrotesk-Cond.otf', deg_size)
-        draw.text(
-            (center_x+(sz[0]/2), y+deg_offset),
-            u'°',
-            font=font,
-            fill=255
-        )
-
-
-    def draw_small_temp( self, center_x, y, caption, draw ):
-
-        self.draw_temp(
-            center_x,
-            y,
-            caption,
-            80,
-            40,
-            10,
-            draw
-        )
-
-
-    def draw_weather_icon( self, buf, fn_icon, pos ):
-
-        fn_icon = os.path.join(
-            "./icons",
-            fn_icon
-        )
-        img_icon = Image.open( fn_icon )
-
-        buf.paste( img_icon, pos )
-
-
-    def draw_weather( self, buf ):
-
-        w = weather.get_weather()
-
-        
-        icon = icons.darksky[ w.icon ]
-        self.draw_weather_icon(
-            buf,
-            icon,
-            [15,215]
-        )
-
-
-        draw = ImageDraw.Draw( buf )
-
-        caption = "%0.0f" % w.temp
-        top_y = 194
-
-        self.draw_temp( 150, top_y, caption, 100, 60, 9, draw )
-
-        mid_y = top_y + 17
-
-        caption = "%0.0f" % w.temp_min
-        self.draw_small_temp( 250, mid_y, caption, draw )
-
-        caption = "%0.0f" % w.temp_max
-        self.draw_small_temp( 350, mid_y, caption, draw )
-
-
     def update_for_datetime( self, dt ):
 
         tz_display = babel.dates.get_timezone('Europe/London')
-        formatted = babel.dates.format_time( dt, "Hmm", tzinfo=tz_display )
+        formatted = babel.dates.format_time( dt, "HHmm", tzinfo=tz_display )
 
         if formatted != self._str_time:
 
-            img_buf = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 1)    # 1: clear the frame
+            w = weather.get_weather()
 
-            # constant shapes burnt into back.bmp
-            img_buf.paste( self._back )
-
-            # draw weather into buffer
-            self.draw_weather( img_buf )
-            
-            im_width = 100
-            offs = 0
-            for n in formatted:
-                fn = 'images/%s.bmp' % n
-                img_num = Image.open(fn)
-                img_buf.paste( img_num, (offs,0) )
-                offs += im_width
-
-            self.display_buffer( img_buf )
+            frame = drawing.draw_frame(
+                EPD_WIDTH, EPD_HEIGHT,
+                formatted,
+                w
+            )
+            self.display_buffer( frame )
             
             self._str_time = formatted
 
 
 if __name__ == '__main__':
     
-    tz_sys = babel.dates.get_timezone( time.tzname[1] )
+    tz_name = "GMT" if DEBUG_MODE else time.tzname[1]
+    tz_sys = babel.dates.get_timezone(
+        tz_name
+    )
 
     clock = PaperClock()
     while True:
