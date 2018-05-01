@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##
  #  @filename   :   main.cpp
  #  @brief      :   4.2inch e-paper display demo
@@ -28,7 +27,6 @@
 import datetime
 import time
 import os
-
 
 #import imagedata
 import babel
