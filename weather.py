@@ -95,8 +95,8 @@ def get_weather():
     
     d = forecast_data["daily"]["data"][0]
 
-    temp_min = d["temperatureLow"]
-    temp_max = d["temperatureHigh"]
+    temp_min = d["temperatureMin"]
+    temp_max = d["temperatureMax"]
 
     c = forecast_data['currently']
 
@@ -104,7 +104,7 @@ def get_weather():
         temp=c['temperature'],
         temp_min=temp_min,
         temp_max=temp_max,
-        icon=c['icon']
+        icon=d['icon']
     )
 
 if __name__ == '__main__':
