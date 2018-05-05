@@ -27,6 +27,8 @@
 import datetime
 import time
 import os
+import sys
+import logging
 
 #import imagedata
 import babel
@@ -84,8 +86,8 @@ class PaperClock( object ):
             self._str_time = formatted
 
 
-if __name__ == '__main__':
-    
+def main():
+
     tz_name = "GMT" if DEBUG_MODE else time.tzname[1]
     tz_sys = babel.dates.get_timezone(
         tz_name
@@ -98,3 +100,26 @@ if __name__ == '__main__':
         )
         time.sleep(0.5)
 
+
+def init_logging():
+
+    logger = logging.getLogger()
+    logger.setLevel( logging.DEBUG )
+
+    handler = None
+    if DEBUG_MODE:
+        handler = logging.StreamHandler( sys.stdout )
+    else:
+        log_address = '/var/run/syslog' if sys.platform == 'darwin' else '/dev/log'
+        handler = logging.handlers.SysLogHandler( address=log_address )
+    
+    logger.addHandler( handler )
+
+
+if __name__ == '__main__':
+    init_logging()
+    try:
+        main()
+    except Exception as e:
+        logging.exception( e )
+        raise
