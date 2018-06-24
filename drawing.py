@@ -89,6 +89,8 @@ def draw_frame( width, height, formatted_time, weather ):
     im_width = 100
     offs = 0
     for n in formatted_time:
+        if n == " ":
+            n = "_SPACE"
         fn = 'images/%s.bmp' % n
         img_num = Image.open(fn)
         img_buf.paste( img_num, (offs,0) )

@@ -3,7 +3,7 @@ Description=Waveshare Clock
 After=network.target
 
 [Service]
-ExecStart=run-clock.sh
+ExecStart=/bin/bash run-clock.sh
 WorkingDirectory=/home/pi/src/waveshare-clock
 StandardOutput=inherit
 StandardError=inherit

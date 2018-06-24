@@ -29,61 +29,15 @@ import time
 import os
 import sys
 import logging
+import logging.handlers
+
+import babel
 
 #import imagedata
-import babel
-import babel.dates
+from paperclock import PaperClock
 
-import weather
-import drawing
-
-
-EPD_WIDTH = 400
-EPD_HEIGHT = 300
 
 DEBUG_MODE = os.environ.get( "CLOCK_DEBUG", "no" ) == "yes"
-
-
-class PaperClock( object ):
-
-    def __init__( self ):
-        
-        if not DEBUG_MODE:
-            import epd4in2
-            self._epd = epd4in2.EPD()
-            self._epd.init()
-        
-        self._str_time = "XXXX"
-
-
-    def display_buffer( self, buf ):
-        
-        if DEBUG_MODE:
-            buf.save( "debug.bmp" )
-            return
-        
-        self._epd.display_frame(
-            self._epd.get_frame_buffer( buf )
-        )
-
-
-    def update_for_datetime( self, dt ):
-
-        tz_display = babel.dates.get_timezone('Europe/London')
-        formatted = babel.dates.format_time( dt, "HHmm", tzinfo=tz_display )
-
-        if formatted != self._str_time:
-
-            w = weather.get_weather()
-
-            frame = drawing.draw_frame(
-                EPD_WIDTH, EPD_HEIGHT,
-                formatted,
-                w
-            )
-            self.display_buffer( frame )
-            
-            self._str_time = formatted
 
 
 def main():
@@ -93,7 +47,7 @@ def main():
         tz_name
     )
 
-    clock = PaperClock()
+    clock = PaperClock( debug_mode=DEBUG_MODE )
     while True:
         clock.update_for_datetime(
             datetime.datetime.now( tz_sys )
@@ -111,7 +65,9 @@ def init_logging():
         handler = logging.StreamHandler( sys.stdout )
     else:
         log_address = '/var/run/syslog' if sys.platform == 'darwin' else '/dev/log'
+        formatter = logging.Formatter('PaperClock: %(message)s')
         handler = logging.handlers.SysLogHandler( address=log_address )
+        handler.setFormatter( formatter )
     
     logger.addHandler( handler )
 

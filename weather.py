@@ -1,4 +1,5 @@
 import os
+import logging
 import json
 import time
 from collections import namedtuple
@@ -24,7 +25,7 @@ def load_cached():
     
     if os.path.exists(fn_cache):
         
-        print( "load cache file: %s" % fn_cache )
+        logging.info( "load cache file: %s" % fn_cache )
         with open(fn_cache) as fp:
             return json.load(fp)
 
@@ -40,7 +41,7 @@ def get_cache_ts():
 
 def fetch_forecast():
 
-    print( "Get a fresh forecast from the internet...")
+    logging.info( "Get a fresh forecast from the internet...")
     
     try:
         r = requests.get(
@@ -62,7 +63,7 @@ def fetch_forecast():
         return r.json()
     
     except Exception as e:
-        print( e )
+        logging.exception( e )
 
     return None
 
