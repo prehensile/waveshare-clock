@@ -49,9 +49,9 @@ class PaperClock( object ):
         )
 
         # set blank minutes if time's hour is within dead ranges
-        h = int(formatted[:2])
+        h = formatted[:2]
         for dead_range in DEAD_TIMES:
-            if h in dead_range:
+            if int(h) in dead_range:
                 formatted = "{}  ".format( h )
 
         if formatted != self._str_time:
