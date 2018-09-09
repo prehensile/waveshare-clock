@@ -68,9 +68,13 @@ class Acquire():
             # refresh every 10 minutes
             if ts_cache is not None:
                 now = time.time()
-                if (now - ts_cache) > (60*10*1000): # every 10 mins
+                if (now - ts_cache) > 60*10: # every 10 mins
                     logging.info("Cache too old, renewing...")
-                    aqcuired_data = self.acquire()
+                    acquired_json = self.acquire()
+                    acquired_data = acquired_json.json()
+                    fn_cache = self.cache_path()
+                    with open(fn_cache,'wb') as fp:
+                        fp.write( acquired_json.text.encode('utf-8') )
 
         return acquired_data
 
