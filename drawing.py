@@ -110,7 +110,9 @@ def draw_aqi( x, y, text, text_size, draw ):
         fill=255
     )
 
-def draw_airly(buf, airly):
+def draw_airly(black_buf, red_buf, airly):
+    buf = black_buf if airly.aqi < int(os.environ.get( "AQI_WARN_LEVEL", "75")) else red_buf
+      
     back = Image.open( 'images/back.bmp' )
     buf.paste( back, (0, 100))
 
@@ -121,23 +123,23 @@ def draw_airly(buf, airly):
 
 
 def draw_frame( formatted_time, weather, airly ):
-    img_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
-    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the red frame
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
+    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)      # 1: clear the red frame
 
 
     # draw weather into buffer
-    draw_weather( img_buf, weather )
+    draw_weather( black_buf, weather )
     
     # draw AQI into buffer
-    draw_airly( img_buf, airly )
+    draw_airly( black_buf, red_buf, airly )
     
     # draw clock into buffer
-    draw_clock( img_buf, formatted_time )
+    draw_clock( black_buf, formatted_time )
     
-    img_buf = img_buf.transpose(Image.ROTATE_90)
-    img_buf = img_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
+    black_buf = black_buf.transpose(Image.ROTATE_90)
+    black_buf = black_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
 
     red_buf = red_buf.transpose(Image.ROTATE_90)
     red_buf = red_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
 
-    return img_buf, red_buf
+    return black_buf, red_buf

@@ -2,5 +2,5 @@ export LAT=50.0720519
 export LON=20.0373204
 export DARKSKY_KEY=GET_YOUR_OWN_KEY
 export AIRLY_KEY=GET_YOUR_OWN_KEY
-
+export AQI_WARN_LEVEL=75
 python main.py
