@@ -51,6 +51,7 @@ class Acquire():
 
         # no data has been cached yet
         if acquired_data is None:
+            logging.info("No cache found")
             acquired_json = self.acquire()
             if acquired_json is not None:
                 acquired_data = acquired_json.json()
@@ -67,7 +68,8 @@ class Acquire():
             # refresh every 10 minutes
             if ts_cache is not None:
                 now = time.time()
-                if (now - ts_cache) > (60*10):
+                if (now - ts_cache) > (60*10*1000): # every 10 mins
+                    logging.info("Cache too old, renewing...")
                     aqcuired_data = self.acquire()
 
         return acquired_data

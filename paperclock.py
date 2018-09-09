@@ -72,7 +72,8 @@ class PaperClock( object ):
 
             frame, frame_red = drawing.draw_frame(
                 formatted,
-                weather_data
+                weather_data,
+                airly_data
             )
             self.display_buffer( frame, frame_red, dt )
             

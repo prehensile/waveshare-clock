@@ -50,7 +50,6 @@ def draw_small_temp( center_x, y, caption, draw ):
         draw
     )
 
-
 def draw_weather_icon( buf, fn_icon, pos ):
 
     fn_icon = os.path.join(
@@ -63,6 +62,8 @@ def draw_weather_icon( buf, fn_icon, pos ):
 
 
 def draw_weather( buf, weather ):
+    back = Image.open( 'images/back.bmp' )
+    buf.paste( back, (0, 200))
 
     icon = icons.darksky[ weather.icon ]
     draw_weather_icon(
@@ -70,7 +71,6 @@ def draw_weather( buf, weather ):
         icon,
         [15,215]
     )
-
 
     draw = ImageDraw.Draw( buf )
 
@@ -101,19 +101,35 @@ def draw_clock(img_buf, formatted_time):
         img_buf.paste( img_num, (offs,0) )
         offs += im_width
 
-def draw_airly():
-    None
+def draw_aqi( x, y, text, text_size, draw ):
+    font = ImageFont.truetype('./font/default', text_size)
+    draw.text(
+        (x, y),
+        text,
+        font=font,
+        fill=255
+    )
 
-def draw_frame( formatted_time, weather ):
+def draw_airly(buf, airly):
+    back = Image.open( 'images/back.bmp' )
+    buf.paste( back, (0, 100))
+
+    draw = ImageDraw.Draw( buf )
+
+    caption = "AQI: %0.0f" % airly.aqi
+    draw_aqi( 7, 95, caption, 90, draw )
+
+
+def draw_frame( formatted_time, weather, airly ):
     img_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
     red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the red frame
 
-    # constant shapes burnt into back.bmp
-    back = Image.open( 'images/back.bmp' )
-    img_buf.paste( back )
 
     # draw weather into buffer
     draw_weather( img_buf, weather )
+    
+    # draw AQI into buffer
+    draw_airly( img_buf, airly )
     
     # draw clock into buffer
     draw_clock( img_buf, formatted_time )

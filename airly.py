@@ -10,7 +10,7 @@ import string
 import requests
 from collections import namedtuple
 
-AirlyTuple = namedtuple( 'Airly', ['pm25', 'pm10', 'CAQI'] )
+AirlyTuple = namedtuple( 'Airly', ['pm25', 'pm10', 'aqi'] )
 
 class Airly(Acquire):
 
@@ -45,6 +45,6 @@ class Airly(Acquire):
         return AirlyTuple(
             pm25=airly_data["current"]["values"][1]['value'],
             pm10=airly_data["current"]["values"][2]['value'],
-            CAQI=airly_data["current"]["indexes"][0]['value']
+            aqi=airly_data["current"]["indexes"][0]['value']
         )
 
