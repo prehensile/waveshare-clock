@@ -6,20 +6,29 @@ from PIL import Image, ImageDraw, ImageFont
 
 import icons
 
+# Display resolution for 2.7" (temporary measure until support for both 2.7" and 4.2" implemented)
+EPD_WIDTH       = 176
+EPD_HEIGHT      = 264
+
+# Virtual canvas size
+CANVAS_WIDTH = 400
+CANVAS_HEIGHT = 300
 
 def draw_temp( center_x, y, temp, temp_size, deg_size, deg_offset, draw ):
-    font = ImageFont.truetype('./font/AkzidenzGrotesk-Cond.otf', temp_size)
-    sz = font.getsize( temp )
+    font = ImageFont.truetype('./font/default', temp_size)
+    text_width = font.getsize( temp )
     draw.text(
-        (center_x-(sz[0]/2), y),
+        (center_x-(text_width[0]/2), y),
         temp,
         font=font,
         fill=255
     )
 
-    font = ImageFont.truetype('./font/AkzidenzGrotesk-Cond.otf', deg_size)
+    point_width = font.getsize( u'°')
+
+    font = ImageFont.truetype('./font/default', deg_size)
     draw.text(
-        (center_x+(sz[0]/2), y+deg_offset),
+        (center_x+(text_width[0]/2) - point_width[0]/2 + 10, y+deg_offset),
         u'°',
         font=font,
         fill=255
@@ -32,9 +41,9 @@ def draw_small_temp( center_x, y, caption, draw ):
         center_x,
         y,
         caption,
-        80,
+        60,
         40,
-        10,
+        7,
         draw
     )
 
@@ -65,7 +74,7 @@ def draw_weather( buf, weather ):
     caption = "%0.0f" % weather.temp
     top_y = 194
 
-    draw_temp( 150, top_y, caption, 100, 60, 9, draw )
+    draw_temp( 150, top_y, caption, 100, 60, 6, draw )
 
     mid_y = top_y + 17
 
@@ -75,9 +84,26 @@ def draw_weather( buf, weather ):
     caption = "%0.0f" % weather.temp_max
     draw_small_temp( 350, mid_y, caption, draw )
 
+def draw_clock(img_buf, formatted_time):
 
-def draw_frame( width, height, formatted_time, weather ):
-    img_buf = Image.new('1', (width, height), 1)    # 1: clear the frame
+    im_width = 100
+    offs = 0
+    for n in formatted_time:
+        if n == " ":
+            n = "_SPACE"
+        fn = 'images/%s.bmp' % n
+        img_num = Image.open(fn)
+        img_num = img_num.resize((img_num.size[0], img_num.size[1]/2), Image.LANCZOS)
+
+        img_buf.paste( img_num, (offs,0) )
+        offs += im_width
+
+def draw_airly():
+    None
+
+def draw_frame( formatted_time, weather ):
+    img_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
+    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the red frame
 
     # constant shapes burnt into back.bmp
     back = Image.open( 'images/back.bmp' )
@@ -86,14 +112,13 @@ def draw_frame( width, height, formatted_time, weather ):
     # draw weather into buffer
     draw_weather( img_buf, weather )
     
-    im_width = 100
-    offs = 0
-    for n in formatted_time:
-        if n == " ":
-            n = "_SPACE"
-        fn = 'images/%s.bmp' % n
-        img_num = Image.open(fn)
-        img_buf.paste( img_num, (offs,0) )
-        offs += im_width
+    # draw clock into buffer
+    draw_clock( img_buf, formatted_time )
+    
+    img_buf = img_buf.transpose(Image.ROTATE_90)
+    img_buf = img_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
 
-    return img_buf
+    red_buf = red_buf.transpose(Image.ROTATE_90)
+    red_buf = red_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
+
+    return img_buf, red_buf

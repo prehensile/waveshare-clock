@@ -24,16 +24,16 @@
  # THE SOFTWARE.
  ##
 
-import datetime
 import time
 import os
 import sys
 import logging
 import logging.handlers
 
-import babel
+from pytz import timezone
+from datetime import datetime
+from tzlocal import get_localzone
 
-#import imagedata
 from paperclock import PaperClock
 
 
@@ -42,18 +42,12 @@ DEBUG_MODE = os.environ.get( "CLOCK_DEBUG", "no" ) == "yes"
 
 def main():
 
-    tz_name = "GMT" if DEBUG_MODE else time.tzname[1]
-    tz_sys = babel.dates.get_timezone(
-        tz_name
-    )
-
     clock = PaperClock( debug_mode=DEBUG_MODE )
     while True:
+        utc_dt = datetime.now(timezone('UTC'))
         clock.update_for_datetime(
-            datetime.datetime.now( tz_sys )
+            utc_dt.astimezone(get_localzone())
         )
-        time.sleep(0.5)
-
 
 def init_logging():
 
