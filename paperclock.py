@@ -3,12 +3,14 @@
 
 import logging
 import json
+import os
 import time
 from datetime import datetime
 
 import drawing
 from airly import Airly
 from weather import Weather
+from gmaps import GMaps
 
 
 # only update once an hour within these ranges
@@ -21,6 +23,8 @@ class PaperClock( object ):
 
     airly = Airly()
     weather = Weather()
+    gmaps1 = GMaps(os.environ.get( "FIRST_TIME_TO_DESTINATION_LAT" ), os.environ.get( "FIRST_TIME_TO_DESTINATION_LON" ), "first")
+    gmaps2 = GMaps(os.environ.get( "SECOND_TIME_TO_DESTINATION_LAT" ), os.environ.get( "SECOND_TIME_TO_DESTINATION_LON" ), "second")
 
     def __init__( self, debug_mode=False ):
         
@@ -69,11 +73,19 @@ class PaperClock( object ):
 
             airly_data = PaperClock.airly.get()
             logging.info("--- airly: " + json.dumps(airly_data))
+            
+            gmaps1_data = PaperClock.gmaps1.get()
+            logging.info("--- gmaps1: " + json.dumps(gmaps1_data))
 
+            gmaps2_data = PaperClock.gmaps2.get()
+            logging.info("--- gmaps2: " + json.dumps(gmaps2_data))
+            
             frame, frame_red = drawing.draw_frame(
                 formatted,
                 weather_data,
-                airly_data
+                airly_data,
+                gmaps1_data,
+                gmaps2_data
             )
             self.display_buffer( frame, frame_red, dt )
             

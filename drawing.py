@@ -113,28 +113,49 @@ def draw_aqi( x, y, text, text_size, draw ):
 def draw_airly(black_buf, red_buf, airly):
     buf = black_buf if airly.aqi < int(os.environ.get( "AQI_WARN_LEVEL", "75")) else red_buf
       
-    back = Image.open( 'images/back.bmp' )
+    back = Image.open( 'images/back_aqi.bmp' )
     buf.paste( back, (0, 100))
 
     draw = ImageDraw.Draw( buf )
 
-    caption = "AQI: %0.0f" % airly.aqi
-    draw_aqi( 7, 95, caption, 90, draw )
+    caption = "%i" % int(round(airly.aqi))
+    draw_aqi( 25, 100, caption, 90, draw )
 
 
-def draw_frame( formatted_time, weather, airly ):
+def draw_eta(idx, black_buf, red_buf, gmaps, warn_above):
+    mins = gmaps.time_to_dest / 60
+    print(mins)
+    buf = black_buf if mins < warn_above else red_buf
+      
+    back = Image.open( "images/back_eta_{}.bmp".format(idx) )
+    buf.paste( back, (4 + 7*idx + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100))
+
+    draw = ImageDraw.Draw( buf )
+
+    caption = "%i" % int(round(mins))
+    draw_aqi( 4 + 7*idx + 50  + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100, caption, 80, draw )
+
+
+
+def draw_frame( formatted_time, weather, airly, gmaps1, gmaps2 ):
     black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
     red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)      # 1: clear the red frame
 
+    # draw clock into buffer
+    draw_clock( black_buf, formatted_time )
+
+    # draw time to dest into buffer
+    draw_eta( 0, black_buf, red_buf, gmaps1, int(os.environ.get( "FIRST_TIME_WARN", "15")) )
+
+    # draw time to dest into buffer
+    draw_eta( 1, black_buf, red_buf, gmaps2, int(os.environ.get( "SECOND_TIME_WARN", "15")) )
+
+    # draw AQI into buffer
+    draw_airly( black_buf, red_buf, airly )
 
     # draw weather into buffer
     draw_weather( black_buf, weather )
     
-    # draw AQI into buffer
-    draw_airly( black_buf, red_buf, airly )
-    
-    # draw clock into buffer
-    draw_clock( black_buf, formatted_time )
     
     black_buf = black_buf.transpose(Image.ROTATE_90)
     black_buf = black_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
