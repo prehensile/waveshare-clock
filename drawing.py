@@ -95,8 +95,34 @@ def draw_clock(img_buf, formatted_time):
         img_buf.paste( img_num, (offs,0) )
         offs += im_width
 
-def draw_aqi( x, y, text, text_size, draw ):
+def draw_text_aqi( x, y, text, text_size, draw ):    
     font = ImageFont.truetype('./font/default', text_size)
+    font_width = font.getsize( text )
+
+    # lower font size to accommodate huge polution levels
+    if font_width[0] > 100:
+        font = ImageFont.truetype('./font/default', text_size * 2 /3 )
+
+    draw.text(
+        (x, y),
+        text,
+        font=font,
+        fill=255
+    )
+
+def draw_text_eta( x, y, text, text_size, draw ):    
+    font = ImageFont.truetype('./font/default', text_size)
+    font_width = font.getsize( text )
+    
+    # lower font size to accommodate time in minutes
+    if font_width[0] > 100:
+        font = ImageFont.truetype('./font/default', text_size * 2 /3 )
+    font_width = font.getsize( text )
+
+    # one more time lower font size to accommodate time in minutes - yes, would be nice to convert value to hours or ... days
+    if font_width[0] > 100:
+        font = ImageFont.truetype('./font/default', text_size * 2 /4 )
+
     draw.text(
         (x, y),
         text,
@@ -113,7 +139,7 @@ def draw_airly(black_buf, red_buf, airly):
     draw = ImageDraw.Draw( buf )
 
     caption = "%i" % int(round(airly.aqi))
-    draw_aqi( 25, 100, caption, 90, draw )
+    draw_text_aqi( 25, 100, caption, 90, draw )
 
 
 def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
@@ -122,12 +148,13 @@ def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
     buf = black_buf if (secs * (100.0 + warn_above_percent) / 100.0) > secs_in_traffic else red_buf
 
     back = Image.open( "images/back_eta_{}.bmp".format(idx) )
-    buf.paste( back, (4 + 7*idx + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100))
+    buf.paste( back, ( (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100) )
 
     draw = ImageDraw.Draw( buf )
 
     caption = "%i" % int(round(secs_in_traffic / 60))
-    draw_aqi( 4 + 7*idx + 50  + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100, caption, 70, draw )
+     
+    draw_text_eta( 50  + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100, caption, 70, draw )
 
 
 def draw_frame( is_mono, formatted_time, weather, airly, gmaps1, gmaps2 ):
