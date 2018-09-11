@@ -4,14 +4,8 @@
 # Modifications: https://github.com/pskowronek/eink-clock-and-more, Apache 2 license
 
 import os 
-
 from PIL import Image, ImageDraw, ImageFont
-
 import icons
-
-# Display resolution for 2.7" (temporary measure until support for both 2.7" and 4.2" implemented)
-EPD_WIDTH       = 176
-EPD_HEIGHT      = 264
 
 # Virtual canvas size
 CANVAS_WIDTH = 400
@@ -136,9 +130,11 @@ def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
     draw_aqi( 4 + 7*idx + 50  + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100, caption, 70, draw )
 
 
-def draw_frame( formatted_time, weather, airly, gmaps1, gmaps2 ):
+def draw_frame( is_mono, formatted_time, weather, airly, gmaps1, gmaps2 ):
     black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
-    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)      # 1: clear the red frame
+    
+    # for mono display we simply use black buffer so all the painting will be done in black
+    red_buf = black_buf if (is_mono) else Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1) # 1: clear the red frame
 
     # draw clock into buffer
     draw_clock( black_buf, formatted_time )
@@ -154,12 +150,5 @@ def draw_frame( formatted_time, weather, airly, gmaps1, gmaps2 ):
 
     # draw weather into buffer
     draw_weather( black_buf, weather )
-    
-    
-    black_buf = black_buf.transpose(Image.ROTATE_90)
-    black_buf = black_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
-
-    red_buf = red_buf.transpose(Image.ROTATE_90)
-    red_buf = red_buf.resize((EPD_WIDTH, EPD_HEIGHT), Image.LANCZOS)
 
     return black_buf, red_buf

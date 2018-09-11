@@ -14,4 +14,8 @@ export SECOND_TIME_TO_DESTINATION_LAT=49.9684476
 export SECOND_TIME_TO_DESTINATION_LON=20.4303646
 export SECOND_TIME_WARN_ABOVE_PERCENT=50
 
+#export EINK_TYPE=waveshare-4.2
+export EINK_TYPE=waveshare-2.7
+#export EINK_MONO=True
+
 python main.py

@@ -57,16 +57,14 @@ def init_logging():
     logger = logging.getLogger()
     logger.setLevel( logging.DEBUG )
 
-    handler = None
-    if DEBUG_MODE:
-        handler = logging.StreamHandler( sys.stdout )
-    else:
+    handler = logging.StreamHandler( sys.stdout )
+    logger.addHandler( handler )
+    
+    if not DEBUG_MODE:
         log_address = '/var/run/syslog' if sys.platform == 'darwin' else '/dev/log'
         formatter = logging.Formatter('PaperClock: %(message)s')
         handler = logging.handlers.SysLogHandler( address=log_address )
         handler.setFormatter( formatter )
-    
-    logger.addHandler( handler )
 
 
 if __name__ == '__main__':
