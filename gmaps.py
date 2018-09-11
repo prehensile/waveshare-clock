@@ -10,7 +10,7 @@ import string
 import requests
 from collections import namedtuple
 
-GMapsTuple = namedtuple( 'Gmaps', ['time_to_dest' ] )
+GMapsTuple = namedtuple( 'Gmaps', ['time_to_dest', 'time_to_dest_in_traffic' ] )
 
 class GMaps(Acquire):
     
@@ -27,7 +27,7 @@ class GMaps(Acquire):
 
         try:
             r = requests.get(
-                "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins={},{}&destinations={},{}&key={}".format(
+                "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&departure_time=now&origins={},{}&destinations={},{}&key={}".format(
                     os.environ.get( "LAT" ),            # move it to c-tor (and the same for other impls of acquire)
                     os.environ.get( "LON" ),            # move it to c-tor (and the same for other impls of acquire)
                     self.lat,
@@ -46,6 +46,8 @@ class GMaps(Acquire):
         gmaps_data = self.load()
 
         return GMapsTuple(
-            time_to_dest=gmaps_data['rows'][0]['elements'][0]['duration']['value'] # in seconds
+            time_to_dest=gmaps_data['rows'][0]['elements'][0]['duration']['value'], # in seconds
+            time_to_dest_in_traffic=gmaps_data['rows'][0]['elements'][0]['duration_in_traffic']['value'] # in seconds
+
         )
 

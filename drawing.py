@@ -96,7 +96,7 @@ def draw_clock(img_buf, formatted_time):
             n = "_SPACE"
         fn = 'images/%s.bmp' % n
         img_num = Image.open(fn)
-        img_num = img_num.resize((img_num.size[0], img_num.size[1]/2), Image.LANCZOS)
+        img_num = img_num.resize((img_num.size[0], img_num.size[1]/2), Image.NEAREST)
 
         img_buf.paste( img_num, (offs,0) )
         offs += im_width
@@ -122,19 +122,18 @@ def draw_airly(black_buf, red_buf, airly):
     draw_aqi( 25, 100, caption, 90, draw )
 
 
-def draw_eta(idx, black_buf, red_buf, gmaps, warn_above):
-    mins = gmaps.time_to_dest / 60
-    print(mins)
-    buf = black_buf if mins < warn_above else red_buf
-      
+def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
+    secs_in_traffic = 1.0 * gmaps.time_to_dest_in_traffic
+    secs = 1.0 * gmaps.time_to_dest
+    buf = black_buf if (secs * (100.0 + warn_above_percent) / 100.0) > secs_in_traffic else red_buf
+
     back = Image.open( "images/back_eta_{}.bmp".format(idx) )
     buf.paste( back, (4 + 7*idx + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100))
 
     draw = ImageDraw.Draw( buf )
 
-    caption = "%i" % int(round(mins))
-    draw_aqi( 4 + 7*idx + 50  + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100, caption, 80, draw )
-
+    caption = "%i" % int(round(secs_in_traffic / 60))
+    draw_aqi( 4 + 7*idx + 50  + (( idx + 1 ) * CANVAS_WIDTH) / 3 , 100, caption, 70, draw )
 
 
 def draw_frame( formatted_time, weather, airly, gmaps1, gmaps2 ):
@@ -145,10 +144,10 @@ def draw_frame( formatted_time, weather, airly, gmaps1, gmaps2 ):
     draw_clock( black_buf, formatted_time )
 
     # draw time to dest into buffer
-    draw_eta( 0, black_buf, red_buf, gmaps1, int(os.environ.get( "FIRST_TIME_WARN", "15")) )
+    draw_eta( 0, black_buf, red_buf, gmaps1, int(os.environ.get( "FIRST_TIME_WARN_ABOVE_PERCENT", "50")) )
 
     # draw time to dest into buffer
-    draw_eta( 1, black_buf, red_buf, gmaps2, int(os.environ.get( "SECOND_TIME_WARN", "15")) )
+    draw_eta( 1, black_buf, red_buf, gmaps2, int(os.environ.get( "SECOND_TIME_WARN_ABOVE_PERCENT", "50")) )
 
     # draw AQI into buffer
     draw_airly( black_buf, red_buf, airly )
