@@ -43,6 +43,7 @@ from paperclock import PaperClock
 DEBUG_MODE = os.environ.get("CLOCK_DEBUG", "no") == "yes"
 clock = None
 
+
 def main():
     global clock
     clock = PaperClock(debug_mode=DEBUG_MODE)
