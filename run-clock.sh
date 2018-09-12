@@ -35,7 +35,7 @@ export SECOND_TIME_WARN_ABOVE_PERCENT=50
 export EPAPER_TYPE=waveshare-2.7
 # You can override the setting as whether the display is mono or not - though, it will require update (replacement) of relevant epdXinX.py library to support mono or bi-color
 #export EPAPER_MONO=True
-# You can ovveride as to wether to listen for button press (enabled by default)
+# You can override whether to listen for button press (enabled by default)
 #export EPAPER_BUTTONS_ENABLED=True
 # You can override GPIO pins assigned to buttons (these values are set by default)
 #export EPAPER_GPIO_PIN_FOR_KEY1=3
