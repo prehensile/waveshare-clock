@@ -46,7 +46,7 @@ class PaperClock(object):
     gmaps2 = GMaps(os.environ.get("SECOND_TIME_TO_DESTINATION_LAT"), os.environ.get("SECOND_TIME_TO_DESTINATION_LON"), "second")
 
 
-    def __init__(self, debug_mode=False):
+    def __init__(self, debug_mode = False):
 
         self._debug_mode = debug_mode
         if not debug_mode:

@@ -30,5 +30,6 @@ darksky = {
     "fog" : "13.bmp",
     "cloudy" : "41.bmp",
     "partly-cloudy-day" : "30.bmp",
-    "partly-cloudy-night" : "31.bmp" 
+    "partly-cloudy-night" : "31.bmp",
+    'n/a' : "45.bmp"
 }

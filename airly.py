@@ -42,8 +42,9 @@ class Airly(Acquire):
 
 
     def get(self):
-
         airly_data = self.load()
+        if airly_data is None:
+            return AirlyTuple(pm25=-1, pm10=-1, aqi=-1)
 
         return AirlyTuple(
             pm25=airly_data["current"]["values"][1]['value'],

@@ -20,7 +20,7 @@ class Weather(Acquire):
 
 
     def acquire(self):
-        logging.info("Get a fresh forecast from the internet...")
+        logging.info("Getting a fresh forecast from the internet...")
 
         try:
             r = requests.get(
@@ -44,6 +44,9 @@ class Weather(Acquire):
 
     def get(self):
         forecast_data = self.load()
+        if forecast_data is None:
+            return WeatherTuple(temp=-99, temp_min=-99, temp_max=-99, icon='n/a')
+        
         d = forecast_data["daily"]["data"][0]
 
         temp_min = d["temperatureMin"]

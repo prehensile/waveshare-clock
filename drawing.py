@@ -152,7 +152,7 @@ def draw_airly(black_buf, red_buf, airly):
 def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
     secs_in_traffic = 1.0 * gmaps.time_to_dest_in_traffic
     secs = 1.0 * gmaps.time_to_dest
-    buf = black_buf if (secs * (100.0 + warn_above_percent) / 100.0) > secs_in_traffic else red_buf
+    buf = black_buf if secs < 0 or secs * (100.0 + warn_above_percent) / 100.0 > secs_in_traffic else red_buf
 
     back = Image.open("images/back_eta_{}.bmp".format(idx))
     buf.paste(back, (((idx + 1) * CANVAS_WIDTH) / 3 , 100))

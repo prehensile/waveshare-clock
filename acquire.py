@@ -8,7 +8,7 @@ import os
 import time
 
 
-class Acquire():
+class Acquire(object):
 
 
     def cache_name(self):
@@ -44,22 +44,39 @@ class Acquire():
         return None
 
 
+    def error_found(self, response):
+        result = False
+        if (response.status_code in [401, 403] ):
+            logging.warn("Remote server returned: %d - probably wrong API key" % response.status_code)
+            result = True
+        elif (response.status_code != 200):
+            logging.warn("Remote server returned unexpected status code: %d" % response.status_code)
+            result = True
+
+        return result
+
+
+    def load_and_cache(self):
+        acquired_data = None
+        acquired_response = self.acquire()
+        if acquired_response is not None:
+            if not self.error_found(acquired_response):
+                acquired_data = acquired_response.json()
+                # write just acquired data to cache
+                fn_cache = self.cache_path()
+                with open(fn_cache,'wb') as fp:
+                    fp.write( acquired_response.text.encode('utf-8'))
+        return acquired_data
+
+
     def load(self):
         # start from cached data 
         acquired_data = self.load_cached()
 
         # no data has been cached yet
         if acquired_data is None:
-            logging.info("No cache found")
-            acquired_json = self.acquire()
-            if acquired_json is not None:
-                acquired_data = acquired_json.json()
-                # write just acquired data to cache
-                fn_cache = self.cache_path()
-                with open(fn_cache,'wb') as fp:
-                    fp.write( acquired_json.text.encode('utf-8'))
-            else:
-                acquired_data = None
+            logging.info("No cache found - acquiring data...")
+            acquired_data = self.load_and_cache()
         else:
             # get last modified time for cache...
             ts_cache = self.get_cache_ts()
@@ -69,11 +86,7 @@ class Acquire():
                 now = time.time()
                 if (now - ts_cache) > 60 * 10:  # every 10 mins
                     logging.info("Cache too old, renewing...")
-                    acquired_json = self.acquire()
-                    acquired_data = acquired_json.json()
-                    fn_cache = self.cache_path()
-                    with open(fn_cache,'wb') as fp:
-                        fp.write( acquired_json.text.encode('utf-8'))
+                    acquired_data = self.load_and_cache()
 
         return acquired_data
 

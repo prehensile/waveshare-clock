@@ -25,6 +25,19 @@ class GMaps(Acquire):
         return "gmaps-{}.json".format(self.name)
 
 
+    def error_found(self, response):
+        result = False
+        if super(GMaps, self).error_found(response):
+            result = True
+        else:
+            json = response.json()
+            if json['error_message']:
+                logging.warn("GMaps API returned the following error: %s" % json['error_message'])
+                result = True
+
+        return result
+
+
     def acquire(self):
         logging.info("Getting time to get to dest1 from the internet...")
 
@@ -46,8 +59,9 @@ class GMaps(Acquire):
 
 
     def get(self):
-
         gmaps_data = self.load()
+        if gmaps_data is None:
+            return GMapsTuple(time_to_dest=-1, time_to_dest_in_traffic=-1)
 
         return GMapsTuple(
             time_to_dest=gmaps_data['rows'][0]['elements'][0]['duration']['value'],  # in seconds
