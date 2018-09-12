@@ -38,7 +38,7 @@ export EPAPER_TYPE=waveshare-2.7
 # You can ovveride as to wether to listen for button press (enabled by default)
 #export EPAPER_BUTTONS_ENABLED=True
 # You can override GPIO pins assigned to buttons (these values are set by default)
-#export EPAPER_GPIO_PIN_FOR_KEY1=5
+#export EPAPER_GPIO_PIN_FOR_KEY1=3
 #export EPAPER_GPIO_PIN_FOR_KEY2=6
 #export EPAPER_GPIO_PIN_FOR_KEY3=13
 #export EPAPER_GPIO_PIN_FOR_KEY4=19

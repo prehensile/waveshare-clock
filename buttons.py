@@ -20,30 +20,30 @@ class Buttons(object):
 
     def register(self):
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(key1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(key2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(key3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(key4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.key1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.key2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.key3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.key4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-        GPIO.add_event_detect(key1, GPIO.FALLING, callback=button1_pressed, bouncetime=200)
-        GPIO.add_event_detect(key2, GPIO.FALLING, callback=button2_pressed, bouncetime=200)
-        GPIO.add_event_detect(key3, GPIO.FALLING, callback=button3_pressed, bouncetime=200)
-        GPIO.add_event_detect(key4, GPIO.FALLING, callback=button4_pressed, bouncetime=200)
+        GPIO.add_event_detect(self.key1, GPIO.FALLING, callback=self.button1_pressed, bouncetime=200)
+        GPIO.add_event_detect(self.key2, GPIO.FALLING, callback=self.button2_pressed, bouncetime=200)
+        GPIO.add_event_detect(self.key3, GPIO.FALLING, callback=self.button3_pressed, bouncetime=200)
+        GPIO.add_event_detect(self.key4, GPIO.FALLING, callback=self.button4_pressed, bouncetime=200)
 
     
-    def button1_pressed(self):
+    def button1_pressed(self, pin):
         logging.info("Button #1 pressed")
 
 
-    def button2_pressed(self):
+    def button2_pressed(self, pin):
         logging.info("Button #2 pressed")
 
 
-    def button3_pressed(self):
+    def button3_pressed(self, pin):
         logging.info("Button #3 pressed")
 
 
-    def button4_pressed(self):
+    def button4_pressed(self, pin):
         logging.info("Button #4 pressed")
 
 
