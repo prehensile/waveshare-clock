@@ -1,0 +1,4 @@
+Pillow
+spidev
+requests
+pytz

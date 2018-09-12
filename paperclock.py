@@ -44,7 +44,7 @@ class PaperClock( object ):
     gmaps2 = GMaps(os.environ.get( "SECOND_TIME_TO_DESTINATION_LAT" ), os.environ.get( "SECOND_TIME_TO_DESTINATION_LON" ), "second")
 
     def __init__( self, debug_mode=False ):
-        
+
         self._debug_mode = debug_mode
         if not debug_mode:
             if DEVICE_TYPE == 'waveshare-2.7':
@@ -105,13 +105,13 @@ class PaperClock( object ):
 
             airly_data = PaperClock.airly.get()
             logging.info("--- airly: " + json.dumps(airly_data))
-            
+
             gmaps1_data = PaperClock.gmaps1.get()
             logging.info("--- gmaps1: " + json.dumps(gmaps1_data))
 
             gmaps2_data = PaperClock.gmaps2.get()
             logging.info("--- gmaps2: " + json.dumps(gmaps2_data))
-            
+
             black_frame, red_frame = drawing.draw_frame(
                 MONO_DISPLAY,
                 formatted,
@@ -121,7 +121,7 @@ class PaperClock( object ):
                 gmaps2_data
             )
             self.display_buffer( black_frame, red_frame, dt )
-            
+
             self._str_time = formatted
-      
+
         time.sleep(60)
