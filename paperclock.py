@@ -64,7 +64,7 @@ class PaperClock(object):
 
     def display(self, black_buf, red_buf, dt):
         if self._debug_mode:
-            debug_output = "/tmp/paperclock-" + dt.strftime("%H-%M-%S")
+            debug_output = "/tmp/paperclock-" + ( dt.strftime("%H-%M-%S") if dt is not None else 'other' )
             logging.info("Debug mode - saving screen output to: " + debug_output + "* bmps")
             black_buf.save(debug_output + "_bw_frame.bmp")
             red_buf.save(debug_output + "_red_frame.bmp")
@@ -93,7 +93,12 @@ class PaperClock(object):
         self.display(black_buf, red_buf, dt)
 
 
-    def update_for_datetime(self, dt):
+    def display_shutdown(self):
+        black_frame, red_frame = drawing.draw_shutdown(MONO_DISPLAY)
+        self.display_buffer(black_frame, red_frame, None)
+
+
+    def display_data(self, dt):
         time_format = "%H%M"
         formatted = dt.strftime(time_format)
 

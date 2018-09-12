@@ -139,7 +139,7 @@ def draw_text_eta(x, y, text, text_size, draw):
 
 def draw_airly(black_buf, red_buf, airly):
     buf = black_buf if airly.aqi < int(os.environ.get("AQI_WARN_LEVEL", "75")) else red_buf
-      
+
     back = Image.open('images/back_aqi.bmp')
     buf.paste(back, (0, 100))
 
@@ -160,13 +160,21 @@ def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
     draw = ImageDraw.Draw(buf)
 
     caption = "%i" % int(round(secs_in_traffic / 60))
-     
+
     draw_text_eta(50  + ((idx + 1) * CANVAS_WIDTH) / 3 , 100, caption, 70, draw)
+
+
+def draw_shutdown(is_mono):
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
+    red_buf = black_buf if (is_mono) else Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)  # 1: clear the red frame
+    shutdown_icon = Image.open("images/shutdown.bmp")
+    red_buf.paste(shutdown_icon, (0, 0))
+    return black_buf, red_buf
 
 
 def draw_frame(is_mono, formatted_time, weather, airly, gmaps1, gmaps2):
     black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
-    
+
     # for mono display we simply use black buffer so all the painting will be done in black
     red_buf = black_buf if (is_mono) else Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)  # 1: clear the red frame
 

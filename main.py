@@ -31,6 +31,7 @@ import os
 import sys
 import logging
 import logging.handlers
+import atexit
 
 from pytz import timezone
 from datetime import datetime
@@ -40,20 +41,29 @@ from paperclock import PaperClock
 
 
 DEBUG_MODE = os.environ.get("CLOCK_DEBUG", "no") == "yes"
-
+clock = None
 
 def main():
-
+    global clock
     clock = PaperClock(debug_mode=DEBUG_MODE)
+    atexit.register(shutdown_hook)
+
     while True:
         utc_dt = datetime.now(timezone('UTC'))
-        clock.update_for_datetime(
+        clock.display_data(
             utc_dt.astimezone(get_localzone())
         )
 
 
-def init_logging():
+def shutdown_hook():
+    logging.info("You are now leaving the Python sector - the app is being shutdown.")
+    if clock is not None:
+        logging.info("...but, let's try to display shutdown icon");
+        clock.display_shutdown()
+        logging.info("...finally going down")
 
+
+def init_logging():
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
