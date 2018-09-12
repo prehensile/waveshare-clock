@@ -31,8 +31,12 @@ class GMaps(Acquire):
             result = True
         else:
             json = response.json()
-            if json['error_message']:
+            text = response.text.encode('utf-8')
+            if 'error_message' in json:
                 logging.warn("GMaps API returned the following error: %s" % json['error_message'])
+                result = True
+            elif 'duration_in_traffic' not in text:
+                logging.warn("GMaps API returned no 'duration_in_traffic' data - probably empty or wrong api key /what a strange API that is/")
                 result = True
 
         return result
