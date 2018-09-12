@@ -5,26 +5,29 @@ from acquire import Acquire
 
 import os
 import logging
-import json
 import requests
 from collections import namedtuple
 
-WeatherTuple = namedtuple( 'Weather', ['temp','temp_min','temp_max','icon'] )
+
+WeatherTuple = namedtuple('Weather', ['temp','temp_min','temp_max','icon'])
+
 
 class Weather(Acquire):
+
 
     def cache_name(self):
         return "darksky.json"
 
+
     def acquire(self):
-        logging.info( "Get a fresh forecast from the internet...")
+        logging.info("Get a fresh forecast from the internet...")
 
         try:
             r = requests.get(
                 "https://api.darksky.net/forecast/{}/{},{}".format(
-                    os.environ.get( "DARKSKY_KEY" ),
-                    os.environ.get( "LAT" ),
-                    os.environ.get( "LON" )
+                    os.environ.get("DARKSKY_KEY"),
+                    os.environ.get("LAT"),
+                    os.environ.get("LON")
                 ),
                 params = {
                     "units" : "si",
@@ -34,9 +37,10 @@ class Weather(Acquire):
             return r
 
         except Exception as e:
-            logging.exception( e )
+            logging.exception(e)
 
         return None
+
 
     def get(self):
         forecast_data = self.load()

@@ -5,33 +5,32 @@ import logging
 
 import json
 import os
-import string
 import time
-from collections import namedtuple
 
-import requests
 
 class Acquire():
+
 
     def cache_name(self):
         return "base.json"
 
+
     def cache_path(self):
-        pth_cache = os.path.expanduser( "~/.eink-display/cache/" )
-        if not os.path.exists( pth_cache ):
-            os.makedirs( pth_cache )
-        return os.path.join( pth_cache, self.cache_name() )
+        pth_cache = os.path.expanduser("~/.eink-display/cache/")
+        if not os.path.exists(pth_cache):
+            os.makedirs(pth_cache)
+        return os.path.join(pth_cache, self.cache_name())
 
 
     def load_cached(self):
-        cached = None
         fn_cache = self.cache_path()
         if os.path.exists(fn_cache):
-            logging.info( "load cache file: %s" % fn_cache )
+            logging.info("load cache file: %s" % fn_cache)
             with open(fn_cache) as fp:
                 return json.load(fp)
 
         return None
+
 
     def get_cache_ts(self):
         fn_cache = self.cache_path()
@@ -58,7 +57,7 @@ class Acquire():
                 # write just acquired data to cache
                 fn_cache = self.cache_path()
                 with open(fn_cache,'wb') as fp:
-                    fp.write( acquired_json.text.encode('utf-8') )
+                    fp.write( acquired_json.text.encode('utf-8'))
             else:
                 acquired_data = None
         else:
@@ -68,16 +67,17 @@ class Acquire():
             # refresh every 10 minutes
             if ts_cache is not None:
                 now = time.time()
-                if (now - ts_cache) > 60*10: # every 10 mins
+                if (now - ts_cache) > 60 * 10:  # every 10 mins
                     logging.info("Cache too old, renewing...")
                     acquired_json = self.acquire()
                     acquired_data = acquired_json.json()
                     fn_cache = self.cache_path()
                     with open(fn_cache,'wb') as fp:
-                        fp.write( acquired_json.text.encode('utf-8') )
+                        fp.write( acquired_json.text.encode('utf-8'))
 
         return acquired_data
 
+
     def get(self):
-        logging.warn( "Don't call base" )
+        logging.warn("Don't call base")
         return None

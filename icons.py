@@ -16,8 +16,9 @@ openweathermap = {
     "13d" : "39.bmp",
     "13n" : "39.bmp",
     "50d" : "13.bmp",
-    "50n" : "13.bmp",
+    "50n" : "13.bmp"
 }
+
 
 darksky = {
     "clear-day" : "28.bmp",

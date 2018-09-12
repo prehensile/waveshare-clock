@@ -5,7 +5,6 @@ import logging
 import json
 import os
 import time
-from datetime import datetime
 from PIL import Image
 
 import drawing
@@ -19,7 +18,8 @@ DEAD_TIMES = [
     range(1,5)          # TODO make it configurable via env vars
 ]
 
-DEVICE_TYPE = os.environ.get( "EINK_TYPE", 'waveshare-2.7')
+DEVICE_TYPE = os.environ.get("EINK_TYPE", 'waveshare-2.7')
+
 
 if DEVICE_TYPE == 'waveshare-2.7':          # TODO refactor to use enums
     # Display resolution for 2.7"
@@ -34,16 +34,19 @@ elif DEVICE_TYPE == 'waveshare-4.2':
 else:
     raise Exception('Incorrect eink screen type: ' + DEVICE_TYPE)
 
-MONO_DISPLAY = bool(os.environ.get( "EINK_MONO", MONO_DISPLAY))   # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is bi-color, 4.2 is mono
 
-class PaperClock( object ):
+MONO_DISPLAY = bool(os.environ.get("EINK_MONO", MONO_DISPLAY))   # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is bi-color, 4.2 is mono
+
+
+class PaperClock(object):
 
     airly = Airly()
     weather = Weather()
-    gmaps1 = GMaps(os.environ.get( "FIRST_TIME_TO_DESTINATION_LAT" ), os.environ.get( "FIRST_TIME_TO_DESTINATION_LON" ), "first")
-    gmaps2 = GMaps(os.environ.get( "SECOND_TIME_TO_DESTINATION_LAT" ), os.environ.get( "SECOND_TIME_TO_DESTINATION_LON" ), "second")
+    gmaps1 = GMaps(os.environ.get("FIRST_TIME_TO_DESTINATION_LAT"), os.environ.get("FIRST_TIME_TO_DESTINATION_LON"), "first")
+    gmaps2 = GMaps(os.environ.get("SECOND_TIME_TO_DESTINATION_LAT"), os.environ.get("SECOND_TIME_TO_DESTINATION_LON"), "second")
 
-    def __init__( self, debug_mode=False ):
+
+    def __init__(self, debug_mode=False):
 
         self._debug_mode = debug_mode
         if not debug_mode:
@@ -58,6 +61,7 @@ class PaperClock( object ):
 
         self._str_time = "XXXX"
 
+
     def display(self, black_buf, red_buf, dt):
         if self._debug_mode:
             debug_output = "/tmp/paperclock-" + dt.strftime("%H-%M-%S")
@@ -68,15 +72,16 @@ class PaperClock( object ):
 
         if not MONO_DISPLAY:
             self._epd.display_frame(
-                self._epd.get_frame_buffer( black_buf ),
-                self._epd.get_frame_buffer( red_buf)
+                self._epd.get_frame_buffer(black_buf),
+                self._epd.get_frame_buffer(red_buf)
             )
         else:
             self._epd.display_frame(
-                self._epd.get_frame_buffer( black_buf )
+                self._epd.get_frame_buffer(black_buf)
             )
 
-    def display_buffer( self, black_buf, red_buf, dt ):
+
+    def display_buffer(self, black_buf, red_buf, dt):
 
         if DEVICE_TYPE == 'waveshare-2.7':
             black_buf = black_buf.transpose(Image.ROTATE_90)
@@ -87,8 +92,8 @@ class PaperClock( object ):
 
         self.display(black_buf, red_buf, dt)
 
-    def update_for_datetime( self, dt ):
-        start = time.time()
+
+    def update_for_datetime(self, dt):
         time_format = "%H%M"
         formatted = dt.strftime(time_format)
 
@@ -96,7 +101,7 @@ class PaperClock( object ):
         h = formatted[:2]
         for dead_range in DEAD_TIMES:
             if int(h) in dead_range:
-                formatted = "{}  ".format( h )
+                formatted = "{}  ".format(h)
 
         if formatted != self._str_time:
 
@@ -120,7 +125,7 @@ class PaperClock( object ):
                 gmaps1_data,
                 gmaps2_data
             )
-            self.display_buffer( black_frame, red_frame, dt )
+            self.display_buffer(black_frame, red_frame, dt)
 
             self._str_time = formatted
 

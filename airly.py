@@ -4,39 +4,42 @@
 from acquire import Acquire
 
 import logging
-import json
 import os
-import string
 import requests
 from collections import namedtuple
 
-AirlyTuple = namedtuple( 'Airly', ['pm25', 'pm10', 'aqi'] )
+
+AirlyTuple = namedtuple('Airly', ['pm25', 'pm10', 'aqi'])
+
 
 class Airly(Acquire):
+
 
     def cache_name(self):
         return "airly.json"
 
+
     def acquire(self):
-        logging.info( "Getting a Airly.eu status from the internet...")
+        logging.info("Getting a Airly.eu status from the internet...")
 
         try:
             r = requests.get(
                 "https://airapi.airly.eu/v2/measurements/point?indexType=AIRLY_CAQI&lat={}&lng={}".format(
-                    os.environ.get( "LAT" ),
-                    os.environ.get( "LON" )
+                    os.environ.get("LAT"),
+                    os.environ.get("LON")
                 ),
                 headers = {
-                    "apikey" : os.environ.get( "AIRLY_KEY" ),
+                    "apikey" : os.environ.get("AIRLY_KEY"),
                     "Accept-Language" : "en",
                     "Accept" : "application/json"
                 }
             )
             return r
         except Exception as e:
-            logging.exception( e )
+            logging.exception(e)
 
         return None
+
 
     def get(self):
 
