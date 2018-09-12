@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Original code: https://github.com/prehensile/waveshare-clock
-# Modifications: https://github.com/pskowronek/eink-clock-and-more, Apache 2 license
+# Modifications: https://github.com/pskowronek/epaper-clock-and-more, Apache 2 license
 
 import os 
 from PIL import Image, ImageDraw, ImageFont

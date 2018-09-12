@@ -25,7 +25,7 @@
 ##
 
 # Original code: https://github.com/prehensile/waveshare-clock
-# Modifications: https://github.com/pskowronek/eink-clock-and-more, Apache 2 license
+# Modifications: https://github.com/pskowronek/epaper-clock-and-more, Apache 2 license
 
 import os
 import sys
@@ -48,6 +48,10 @@ def main():
     global clock
     clock = PaperClock(debug_mode=DEBUG_MODE)
     atexit.register(shutdown_hook)
+    
+    if not DEBUG_MODE and os.environ.get("EPAPER_BUTTONS_ENABLED", "yes"):
+        from buttons import Buttons
+        Buttons()
 
     while True:
         utc_dt = datetime.now(timezone('UTC'))

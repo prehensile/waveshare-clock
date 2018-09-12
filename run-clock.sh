@@ -30,10 +30,17 @@ export SECOND_TIME_TO_DESTINATION_LON=20.4303646
 # The displayed block will become red (on supported displays) when driving time exceeds by % 
 export SECOND_TIME_WARN_ABOVE_PERCENT=50
 
-# A type of EINK display you want to use - either Waveshare 4"2 (mono) or 2"7 (bi-color) - this automatically sets EINK_MONO to True for 2"7 and to False for 4"7
-#export EINK_TYPE=waveshare-4.2
-export EINK_TYPE=waveshare-2.7
+# A type of EPAPER display you want to use - either Waveshare 4"2 (mono) or 2"7 (bi-color) - this automatically sets EPAPER_MONO to True for 2"7 and to False for 4"7
+#export EPAPER_TYPE=waveshare-4.2
+export EPAPER_TYPE=waveshare-2.7
 # You can override the setting as whether the display is mono or not - though, it will require update (replacement) of relevant epdXinX.py library to support mono or bi-color
-#export EINK_MONO=True
+#export EPAPER_MONO=True
+# You can ovveride as to wether to listen for button press (enabled by default)
+#export EPAPER_BUTTONS_ENABLED=True
+# You can override GPIO pins assigned to buttons (these values are set by default)
+#export EPAPER_GPIO_PIN_FOR_KEY1=5
+#export EPAPER_GPIO_PIN_FOR_KEY2=6
+#export EPAPER_GPIO_PIN_FOR_KEY3=13
+#export EPAPER_GPIO_PIN_FOR_KEY4=19
 
 python main.py

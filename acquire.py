@@ -1,5 +1,5 @@
 # Original code: https://github.com/prehensile/waveshare-clock
-# Modifications: https://github.com/pskowronek/eink-clock-and-more, Apache 2 license
+# Modifications: https://github.com/pskowronek/epaper-clock-and-more, Apache 2 license
 
 import logging
 
@@ -16,7 +16,7 @@ class Acquire(object):
 
 
     def cache_path(self):
-        pth_cache = os.path.expanduser("~/.eink-display/cache/")
+        pth_cache = os.path.expanduser("~/.epaper-display/cache/")
         if not os.path.exists(pth_cache):
             os.makedirs(pth_cache)
         return os.path.join(pth_cache, self.cache_name())

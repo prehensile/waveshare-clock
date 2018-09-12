@@ -1,5 +1,5 @@
 # Original code: https://github.com/prehensile/waveshare-clock
-# Modifications: https://github.com/pskowronek/eink-clock-and-more, Apache 2 license
+# Modifications: https://github.com/pskowronek/epaper-clock-and-more, Apache 2 license
 
 import logging
 import json
@@ -18,7 +18,7 @@ DEAD_TIMES = [
     range(1,5)          # TODO make it configurable via env vars
 ]
 
-DEVICE_TYPE = os.environ.get("EINK_TYPE", 'waveshare-2.7')
+DEVICE_TYPE = os.environ.get("EPAPER_TYPE", 'waveshare-2.7')
 
 
 if DEVICE_TYPE == 'waveshare-2.7':          # TODO refactor to use enums
@@ -32,10 +32,10 @@ elif DEVICE_TYPE == 'waveshare-4.2':
     EPD_HEIGHT      = 300
     MONO_DISPLAY    = True
 else:
-    raise Exception('Incorrect eink screen type: ' + DEVICE_TYPE)
+    raise Exception('Incorrect epaper screen type: ' + DEVICE_TYPE)
 
 
-MONO_DISPLAY = bool(os.environ.get("EINK_MONO", MONO_DISPLAY))   # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is bi-color, 4.2 is mono
+MONO_DISPLAY = bool(os.environ.get("EPAPER_MONO", MONO_DISPLAY))   # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is bi-color, 4.2 is mono
 
 
 class PaperClock(object):
