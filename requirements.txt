@@ -13,7 +13,7 @@ epdif == 0.1
 # epd2in7.py: 31
 # epd4in2.py: 29
 # epdif.py: 28
-fakerpigpio == 0.3a0
+#fakerpigpio == 0.3a0
 
 # epd4in2.py: 28
 pil-compat == 1.0.0
