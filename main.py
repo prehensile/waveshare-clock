@@ -59,7 +59,7 @@ def main():
 def shutdown_hook():
     logging.info("You are now leaving the Python sector - the app is being shutdown.")
     if clock is not None:
-        logging.info("...but, let's try to display shutdown icon");
+        logging.info("...but, let's try to display shutdown icon")
         clock.display_shutdown()
         logging.info("...finally going down")
 
