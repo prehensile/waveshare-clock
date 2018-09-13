@@ -51,7 +51,7 @@ def main():
     
     if not DEBUG_MODE and os.environ.get("EPAPER_BUTTONS_ENABLED", "yes"):
         from buttons import Buttons
-        Buttons()
+        Buttons(clock)
 
     while True:
         utc_dt = datetime.now(timezone('UTC'))
