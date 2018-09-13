@@ -9,7 +9,7 @@ import requests
 from collections import namedtuple
 
 
-AirlyTuple = namedtuple('Airly', ['pm25', 'pm10', 'aqi'])
+AirlyTuple = namedtuple('Airly', ['pm25', 'pm10', 'hummidity', 'pressure', 'aqi', 'level', 'advice'])
 
 
 class Airly(Acquire):
@@ -49,6 +49,10 @@ class Airly(Acquire):
         return AirlyTuple(
             pm25=airly_data["current"]["values"][1]['value'],
             pm10=airly_data["current"]["values"][2]['value'],
-            aqi=airly_data["current"]["indexes"][0]['value']
+            pressure=airly_data["current"]["values"][3]['value'],
+            hummidity=airly_data["current"]["values"][4]['value'],
+            aqi=airly_data["current"]["indexes"][0]['value'],
+            level=airly_data["current"]["indexes"][0]['level'],
+            advice=airly_data["current"]["indexes"][0]['advice']
         )
 

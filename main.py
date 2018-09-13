@@ -55,9 +55,7 @@ def main():
 
     while True:
         utc_dt = datetime.now(timezone('UTC'))
-        clock.display_data(
-            utc_dt.astimezone(get_localzone())
-        )
+        clock.display_main_screen(utc_dt.astimezone(get_localzone()))
 
 
 def shutdown_hook():

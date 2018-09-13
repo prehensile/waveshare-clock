@@ -33,17 +33,21 @@ class Buttons(object):
     
     def button1_pressed(self, pin):
         logging.info("Button #1 pressed")
-
+        self.clock.display_gmaps_details()
+                   
 
     def button2_pressed(self, pin):
         logging.info("Button #2 pressed")
+        self.clock.display_airly_details()
 
 
     def button3_pressed(self, pin):
         logging.info("Button #3 pressed")
+        self.clock.display_weather_details()
 
 
     def button4_pressed(self, pin):
         logging.info("Button #4 pressed")
+        self.clock.display_system_details()
 
 

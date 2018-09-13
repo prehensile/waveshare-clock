@@ -13,48 +13,32 @@ CANVAS_WIDTH = 400
 CANVAS_HEIGHT = 300
 
 
+def draw_text(x, y, text, font_size, draw):
+    font = ImageFont.truetype('./font/default', font_size)
+    draw.text((x, y), text, font=font, fill=0)
+
+
 def draw_temp(center_x, y, temp, temp_size, deg_size, deg_offset, draw):
     font = ImageFont.truetype('./font/default', temp_size)
     text_width = font.getsize(temp)
-    draw.text(
-        (center_x - (text_width[0] / 2), y),
-        temp,
-        font=font,
-        fill=255
-    )
+    draw.text((center_x - (text_width[0] / 2), y), temp, font=font, fill=255)
 
     point_width = font.getsize(u'°')
 
     font = ImageFont.truetype('./font/default', deg_size)
-    draw.text(
-        (center_x + (text_width[0] / 2) - point_width[0] / 2 + 10, y + deg_offset),
-        u'°',
-        font=font,
-        fill=255
-    )
+    draw.text((center_x + (text_width[0] / 2) - point_width[0] / 2 + 10, y + deg_offset), u'°', font=font, fill=255)
 
 
 def draw_small_temp(center_x, y, caption, draw):
-
-    draw_temp(
-        center_x,
-        y,
-        caption,
-        60,
-        40,
-        7,
-        draw
-    )
+    draw_temp(center_x, y, caption, 60, 40, 7, draw)
 
 
 def draw_weather_icon(buf, fn_icon, pos):
-
     fn_icon = os.path.join(
         "./icons",
         fn_icon
     )
     img_icon = Image.open(fn_icon)
-
     buf.paste(img_icon, pos)
 
 
@@ -108,12 +92,7 @@ def draw_text_aqi(x, y, text, text_size, draw):
     if font_width[0] > 100:
         font = ImageFont.truetype('./font/default', text_size * 2 / 3)
 
-    draw.text(
-        (x, y),
-        text,
-        font=font,
-        fill=255
-    )
+    draw.text((x, y), text, font=font, fill=255)
 
 
 def draw_text_eta(x, y, text, text_size, draw):    
@@ -129,12 +108,7 @@ def draw_text_eta(x, y, text, text_size, draw):
     if font_width[0] > 100:
         font = ImageFont.truetype('./font/default', text_size * 2 / 4)
 
-    draw.text(
-        (x, y),
-        text,
-        font=font,
-        fill=255
-    )
+    draw.text((x, y), text, font=font, fill=255)
 
 
 def draw_airly(black_buf, red_buf, airly):
@@ -165,18 +139,76 @@ def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
 
 
 def draw_shutdown(is_mono):
-    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
-    red_buf = black_buf if (is_mono) else Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)  # 1: clear the red frame
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    red_buf = black_buf if (is_mono) else Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
     shutdown_icon = Image.open("images/shutdown.bmp")
     red_buf.paste(shutdown_icon, (0, 0))
     return black_buf, red_buf
 
 
+def draw_airly_details(airly):
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    draw = ImageDraw.Draw(black_buf)
+    draw_text(10, 10, "Air Quality Index by Airly.eu", 35, draw)
+
+    draw_text(10, 60, "PM 2.5: {}, PM 10: {}".format(airly.pm25, airly.pm10), 30, draw)
+    draw_text(10, 90, "AQI: {}, level: {}".format(airly.aqi, airly.level), 30, draw)
+    draw_text(10, 120, "Advice:", 30, draw)
+    draw_text(10, 150, airly.advice, 25, draw)
+    draw_text(10, 200, "Hummidity: {}".format(airly.hummidity), 30, draw)
+    draw_text(10, 230, "Pressure:  {}".format(airly.pressure), 30, draw)
+
+    return black_buf, red_buf
+
+
+def draw_gmaps_details(gmaps1, gmaps2):
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    draw = ImageDraw.Draw(black_buf)
+    draw_text(10, 10, "Traffic information by Google", 35, draw)
+
+    # TODO FIX UTF-8 issue (font? encoding?)
+    draw_text(10, 60, "From: {}".format(gmaps1.origin_address.encode('utf-8')), 25, draw)
+    draw_text(10, 120, "To #1: {}".format(gmaps1.destination_address.encode('utf-8')), 25, draw)
+    draw_text(10, 150, "{}, avg: {}m, now: {}m".format(gmaps1.distance, gmaps1.time_to_dest / 60, gmaps1.time_to_dest_in_traffic / 60), 30, draw)
+
+    draw_text(10, 200, "To #2: {}".format(gmaps2.destination_address.encode('utf-8')), 25, draw)
+    draw_text(10, 230, "{}, avg: {}m, now: {}m".format(gmaps2.distance, gmaps2.time_to_dest / 60, gmaps2.time_to_dest_in_traffic / 60), 30, draw)
+
+    return black_buf, red_buf
+
+
+def draw_weather_details(weather):
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    draw = ImageDraw.Draw(black_buf)
+    draw_text(10, 10, "Weather by DarkSky.net", 35, draw)
+
+    draw_text(10, 90, "Temperature: {}".format(weather.temp), 30, draw)
+    draw_text(10, 120, "Daily min: {}, max: {}".format(weather.temp_min, weather.temp_max), 30, draw)
+    draw_text(10, 150, "Summary: ", 30, draw)
+    draw_text(10, 180, "{}".format(weather.summary.encode('utf-8')), 25, draw)
+
+    return black_buf, red_buf
+
+
+def draw_system_details():
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
+    draw = ImageDraw.Draw(black_buf)
+    draw_text(10, 10, "System info", 35, draw)
+
+    # TBD
+
+    return black_buf, red_buf
+
+
 def draw_frame(is_mono, formatted_time, weather, airly, gmaps1, gmaps2):
-    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)    # 1: clear the frame
+    black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
 
     # for mono display we simply use black buffer so all the painting will be done in black
-    red_buf = black_buf if (is_mono) else Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)  # 1: clear the red frame
+    red_buf = black_buf if (is_mono) else Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
 
     # draw clock into buffer
     draw_clock(black_buf, formatted_time)

@@ -62,9 +62,9 @@ class PaperClock(object):
         self._str_time = "XXXX"
 
 
-    def display(self, black_buf, red_buf, dt):
+    def display(self, black_buf, red_buf, name):
         if self._debug_mode:
-            debug_output = "/tmp/paperclock-" + ( dt.strftime("%H-%M-%S") if dt is not None else 'other' )
+            debug_output = "/tmp/paperclock-" + ( name.strftime("%H-%M-%S") if type(name) is not str else name )
             logging.info("Debug mode - saving screen output to: " + debug_output + "* bmps")
             black_buf.save(debug_output + "_bw_frame.bmp")
             red_buf.save(debug_output + "_red_frame.bmp")
@@ -95,10 +95,30 @@ class PaperClock(object):
 
     def display_shutdown(self):
         black_frame, red_frame = drawing.draw_shutdown(MONO_DISPLAY)
-        self.display_buffer(black_frame, red_frame, None)
+        self.display_buffer(black_frame, red_frame, 'shutdown')
 
 
-    def display_data(self, dt):
+    def display_airly_details(self):
+        black_frame, red_frame = drawing.draw_airly_details(PaperClock.airly.get())
+        self.display_buffer(black_frame, red_frame, 'airly')
+
+
+    def display_gmaps_details(self):
+        black_frame, red_frame = drawing.draw_gmaps_details(PaperClock.gmaps1.get(), PaperClock.gmaps2.get())
+        self.display_buffer(black_frame, red_frame, 'gmaps')
+
+
+    def display_weather_details(self):
+        black_frame, red_frame = drawing.draw_weather_details(PaperClock.weather.get())
+        self.display_buffer(black_frame, red_frame, 'weather')
+
+
+    def display_system_details(self):
+        black_frame, red_frame = drawing.draw_system_details()
+        self.display_buffer(black_frame, red_frame, 'system')
+
+
+    def display_main_screen(self, dt):
         time_format = "%H%M"
         formatted = dt.strftime(time_format)
 

@@ -9,7 +9,7 @@ import requests
 from collections import namedtuple
 
 
-WeatherTuple = namedtuple('Weather', ['temp','temp_min','temp_max','icon'])
+WeatherTuple = namedtuple('Weather', ['temp', 'temp_min', 'temp_max', 'icon', 'summary'])
 
 
 class Weather(Acquire):
@@ -58,5 +58,7 @@ class Weather(Acquire):
             temp=c['temperature'],
             temp_min=temp_min,
             temp_max=temp_max,
-            icon=d['icon']
+            icon=d['icon'],
+            summary=c['summary']
+
         )

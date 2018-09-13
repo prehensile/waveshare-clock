@@ -9,7 +9,7 @@ import requests
 from collections import namedtuple
 
 
-GMapsTuple = namedtuple('Gmaps', ['time_to_dest', 'time_to_dest_in_traffic' ])
+GMapsTuple = namedtuple('Gmaps', ['time_to_dest', 'time_to_dest_in_traffic', 'distance', 'origin_address', 'destination_address' ])
 
 
 class GMaps(Acquire):
@@ -69,6 +69,9 @@ class GMaps(Acquire):
 
         return GMapsTuple(
             time_to_dest=gmaps_data['rows'][0]['elements'][0]['duration']['value'],  # in seconds
-            time_to_dest_in_traffic=gmaps_data['rows'][0]['elements'][0]['duration_in_traffic']['value']  # in seconds
+            time_to_dest_in_traffic=gmaps_data['rows'][0]['elements'][0]['duration_in_traffic']['value'],  # in seconds
+            distance=gmaps_data['rows'][0]['elements'][0]['distance']['text'],  # in km, string with km
+            origin_address=gmaps_data['origin_addresses'][0],
+            destination_address=gmaps_data['destination_addresses'][0]
         )
 

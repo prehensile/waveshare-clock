@@ -12,7 +12,7 @@ class Acquire(object):
 
 
     def cache_name(self):
-        return "base.json"
+        pass
 
 
     def cache_path(self):
@@ -40,8 +40,7 @@ class Acquire(object):
 
 
     def acquire(self):
-        logging.warn( "Don't call base!")
-        return None
+        pass
 
 
     def error_found(self, response):
@@ -92,5 +91,5 @@ class Acquire(object):
 
 
     def get(self):
-        logging.warn("Don't call base")
-        return None
+        pass
+
