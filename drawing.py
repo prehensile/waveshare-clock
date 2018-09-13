@@ -166,7 +166,7 @@ def draw_gmaps_details(gmaps1, gmaps2):
     black_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
     red_buf = Image.new('1', (CANVAS_WIDTH, CANVAS_HEIGHT), 1)
     draw = ImageDraw.Draw(black_buf)
-    draw_text(10, 10, "Traffic information by Google", 35, draw)
+    draw_text(10, 10, "Traffic info by Google", 35, draw)
 
     # TODO FIX UTF-8 issue (font? encoding?)
     draw_text(10, 60, "From: {}".format(gmaps1.origin_address.encode('utf-8')), 25, draw)

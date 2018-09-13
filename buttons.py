@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 
 class Buttons(object):
 
-    key1 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY1", "3"))
+    key1 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY1", "5"))
     key2 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY2", "6"))
     key3 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY3", "13"))
     key4 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY4", "19"))
