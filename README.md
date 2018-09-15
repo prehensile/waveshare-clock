@@ -14,6 +14,13 @@ This project enhances the orignal project to support Waveshare 2.7inch displays 
 
 For both new gauges one may configure warning levels - in such a case the particular gauge becomes red (on supported devices, i.e. 2.7inch BWR).
 
+## Assembled
+
+[![Assembled](https://github.com/pskowronek/epaper-clock-and-more/raw/master/www/assembled/01.jpg)](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more").
+
+More photos of assembled e-paper 2.7inch + Raspberry Pi zero enclosed in LEGO enclosure running this project are [here](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more").
+
+
 ## Hardware Requirements
 
 - [Raspberry Pi Zero](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-zero/9749-raspberry-pi-zero-wh-512mb-ram-wifi-bt-41-ze-zlaczami.html) or similar
