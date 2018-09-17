@@ -78,6 +78,7 @@ E-paper 2.7inch by Waveshare does not support partial refresh and every modifica
 - better time/delay handling to refresh every 60s (use scheduler)
 - detailed info executed by a key press should be kept on screen for some amount of time (now the clock update closes/repaints the info)
 - service script and instructions to launch epaper-clock-and-more on system start
+- fix utf-8 handling for traffic details (and other places)
 
 ## License
 

@@ -4,7 +4,6 @@
 import logging
 import json
 import os
-import time
 from PIL import Image
 
 import drawing
