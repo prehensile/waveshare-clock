@@ -1,11 +1,9 @@
 [Unit]
 Description=epaper-clock-and-more
 After=network.target
-Restart=always
 
 [Service]
-ExecStart=/bin/bash run.sh
-RootDirectory=/home/pi/epaper-clock-and-more
+ExecStart=/home/pi/epaper-clock-and-more/run.sh
 WorkingDirectory=/home/pi/epaper-clock-and-more
 StandardOutput=inherit
 StandardError=inherit

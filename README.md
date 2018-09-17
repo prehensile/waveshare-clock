@@ -46,15 +46,17 @@ More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry
   - a key for weather forecast from DarkSky.net - you can get it [here](https://darksky.net/dev/register) *)
   - a key for Air Quality Index data from Airly.eu - you can get it [here](https://developer.airly.eu/register) *)
   - type of e-paper device, whether is is 2.7 or 4.2 (by default it is pre-configured for 2.7" BWR)
-- run the script: ```./run-clock.sh``` (hit Ctrl-C to exit) and verify if it works as expected
+- run the script: ```./run.sh``` (hit Ctrl-C to exit) and verify if it works as expected
 - install this project as service so it could automatically run when Raspberry boots up (more details [here](https://www.raspberrypi.org/documentation/linux/usage/systemd.md))
-  - copy epaper.service to /etc/systemd/system: ```sudo cp epaper.service /etc/systemd/system/```
+  - copy epaper.service to /etc/systemd/system: ```sudo cp epaper.service /etc/systemd/system/``` **)
   - verify if service works by invoking the following command: ```sudo systemctl start epaper.service```
   - enable this script so it could be run on system start: ```sudo systemctl enable epaper.service```
   - reboot device to see verify if it works
-  - logs can be found in /var/log/syslog
+  - if you needed to modify epaper.service issue this command: ```sudo systemctl daemon-reload```
+  - logs can be observed in /var/log/syslog
 
 *) Data are being fetched every 10 minutes so they should comply with developer free accounts limitations.
+**) If your project directory is different than /home/pi/epaper-clock-and-more then you must edit this file to reflect the correct path
 
 ## Tech details
 
