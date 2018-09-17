@@ -13,9 +13,8 @@ from gmaps import GMaps
 
 
 # only update once an hour within these ranges
-DEAD_TIMES = [
-    range(1,5)          # TODO make it configurable via env vars
-]
+# eval - don't try this at home :) i.e. don't expose envs to alians
+DEAD_TIMES = eval(os.environ.get("DEAD_TIMES", "[]"))
 
 DEVICE_TYPE = os.environ.get("EPAPER_TYPE", 'waveshare-2.7')
 

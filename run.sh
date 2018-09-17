@@ -39,6 +39,10 @@ export SECOND_TIME_TO_DESTINATION_LON=20.4303646
 # The displayed block will become red (on supported displays) when driving time exceeds by % 
 export SECOND_TIME_WARN_ABOVE_PERCENT=50
 
+# Dead times - between stated hours data & display update is being done once in an hour and minutes won't be displayed. Default is [] - no dead times.
+# This env var will be evaluated by python - so becareful, first: don't expose this env to outside world (security), second: follow the syntax otherwise program will die
+#export DEAD_TIMES="[range(1,5),range(10,15)]"
+
 # A type of EPAPER display you want to use - either Waveshare 4"2 (mono) or 2"7 (bi-color) - this automatically sets EPAPER_MONO to True for 2"7 and to False for 4"7
 #export EPAPER_TYPE=waveshare-4.2
 export EPAPER_TYPE=waveshare-2.7
