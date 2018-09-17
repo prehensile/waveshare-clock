@@ -18,7 +18,7 @@ For both new gauges one may configure warning levels - in such a case the partic
 
 [![Assembled](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/01.JPG)](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more")
 
-More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry Pi zero enclosed in a custom-built LEGO™ housng and running this project are [here](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more").
+More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry Pi zero enclosed in a custom-built LEGO™ housing and running this project are [here](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more").
 
 *BTW, these LEGO bricks are almost 30 years old (!)*
 
@@ -45,24 +45,25 @@ More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry
   - a key for traffic information from Google Maps - you can get it [here](https://developers.google.com/maps/documentation/embed/get-api-key) *)
   - a key for weather forecast from DarkSky.net - you can get it [here](https://darksky.net/dev/register) *)
   - a key for Air Quality Index data from Airly.eu - you can get it [here](https://developer.airly.eu/register) *)
-  - type of e-paper device, whether is is 2.7 or 4.2 (by default it is pre-configured for 2.7" BWR)
+  - type of e-paper device, whether it is 2.7 or 4.2 (by default it is pre-configured for 2.7" BWR)
 - run the script: ```./run.sh``` (hit Ctrl-C to exit) and verify if it works as expected
 - install this project as service so it could automatically run when Raspberry boots up (more details [here](https://www.raspberrypi.org/documentation/linux/usage/systemd.md))
   - copy epaper.service to /etc/systemd/system: ```sudo cp epaper.service /etc/systemd/system/``` **)
   - verify if service works by invoking the following command: ```sudo systemctl start epaper.service```
   - enable this script so it could be run on system start: ```sudo systemctl enable epaper.service```
-  - reboot device to see verify if it works
+  - reboot device to verify if it works
   - if you needed to modify epaper.service issue this command: ```sudo systemctl daemon-reload```
-  - logs can be observed in /var/log/syslog
+  - logs can be observed in /var/log/syslog: ```sudo tail -f /var/log/syslog | grep run.sh```
 
-*) Data are being fetched every 10 minutes so they should comply with developer free accounts limitations.
+*) Data are being fetched every 10 minutes so they should comply with developer free accounts limitations
+
 **) If your project directory is different than /home/pi/epaper-clock-and-more then you must edit this file to reflect the correct path
 
 ## Tech details
 
 ### 2.7inch & 4.2inch support
 
-Since the original project supported 4.2inch B&W displays only the code has been modified to support also 2.7inch B+W+R displays. This has been done by adding a second red canvas and down-sizing the black and red canvases to smaller resolutions as required by 2.7inch displays.
+Since the original project supported 4.2inch B&W displays only, the code has been modified to support also 2.7inch B+W+R displays. This has been done by adding a second red canvas and down-sizing the black and red canvases to smaller resolutions as required by 2.7inch displays.
 
 ### 2.7inch display refresh
 
@@ -77,12 +78,11 @@ E-paper 2.7inch by Waveshare does not support partial refresh and every modifica
 - implement system info (executed by 4th button)
 - better time/delay handling to refresh every 60s (use scheduler)
 - detailed info executed by a key press should be kept on screen for some amount of time (now the clock update closes/repaints the info)
-- service script and instructions to launch epaper-clock-and-more on system start
 - fix utf-8 handling for traffic details (and other places)
 
 ## License
 
-Since this project is a fork the original licenses still apply. The modifications and enhancements are being done under Apache 2 license.
+Since this project is a fork, the original licenses still apply. The modifications and enhancements are being done under Apache 2 license.
 
 ## Authors
 
