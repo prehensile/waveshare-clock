@@ -34,11 +34,11 @@ More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry
 - install [Raspbian](https://www.raspberrypi.org/downloads/) on SD card using [this](https://www.raspberrypi.org/documentation/installation/installing-images/README.md) instruction
 - enable and configure WiFi before you start the system - more [here](https://howchoo.com/g/ndy1zte2yjn/how-to-set-up-wifi-on-your-raspberry-pi-without-ethernet)
 - find the IP of RPi by scanning you local network or take a look at your router to find a new device connected to your network
-- SSH to your raspberry: ssh pi@10.20.30.40
+- SSH to your raspberry: ```ssh pi@10.20.30.40```
 - python 2.7 should be already present, you may want to verify this by running: ```python --version```
 - install git: ```sudo apt install git```
-- issue this command to fetch this project: ```git clone https://github.com/pskowronek/epaper-clock-and-more.git```
-- go to project directory: ```cd epaper-clock-and-more``` and install required python modules: ```pip install -r requirements.txt```
+- issue the command to fetch this project: ```git clone https://github.com/pskowronek/epaper-clock-and-more.git```
+- go to the project directory: ```cd epaper-clock-and-more``` and install required python modules: ```pip install -r requirements.txt```
 - edit run.sh and configure:
   - your home location (lon & lat)
   - two destinations to check traffic delays
