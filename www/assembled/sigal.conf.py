@@ -169,7 +169,7 @@ output_filename = 'index.html'
 # use_assets_cdn = True
 
 # A list of links (tuples (title, URL))
-links = [('Back to epaper-clock-and-more @ github.com', 'https://github.com/pskowronek/epaper-clock-and-more#assembled') ]
+links = [('Back to epaper-clock-and-more @ github.com', 'https://github.com/pskowronek/epaper-clock-and-more#screenshots--photos') ]
 
 # Google Analytics tracking code (UA-xxxx-x)
 # google_analytics = ''

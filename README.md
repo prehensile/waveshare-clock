@@ -6,19 +6,19 @@ _Language versions:_\
 # Clock + weather + AQI + traffic - on Raspberry Pi & e-paper [![Build Status](https://travis-ci.org/pskowronek/epaper-clock-and-more.svg?branch=master)](https://travis-ci.org/pskowronek/epaper-clock-and-more)
 
 This is a forked project of [waveshare-clock](https://github.com/prehensile/waveshare-clock) that only displayed clock and weather and supported only Waveshare 4.2inch B&W displays.
-This project enhances the orignal project to support Waveshare 2.7inch displays with red die (BWR) and adds additional features:
+This project enhances the original project to support Waveshare 2.7inch displays with red die (BWR) and adds the following additional features:
 - gauges for current traffic drive times for two configured destinations (thanks to Google Maps API)
 - gauge for air quality index (AQI) of home location (thanks to Airly.eu API)
-- buttons handlers to display detailed information about: weather, air quality, traffic and system information (on supported devices, i.e. 2.7inch HUT with switches)
+- button handlers to display detailed information about: weather, air quality, traffic and system information (on supported devices, i.e. 2.7inch HUT with switches)
 - font with relaxed license already included in the project
 
 For both new gauges one may configure warning levels - in such a case the particular gauge becomes red (on supported devices, i.e. 2.7inch BWR).
 
-## Assembled
+## Screenshots / Photos
 
-[![Assembled](https://github.com/pskowronek/epaper-clock-and-more/raw/master/www/assembled/01.jpg)](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more").
+[![Assembled](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/01.JPG)](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more")
 
-More photos of assembled e-paper 2.7inch + Raspberry Pi zero enclosed in LEGO enclosure running this project are [here](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more").
+More photos of assembled e-paper 2.7inch + Raspberry Pi zero in LEGO enclosure running this project are [here](https://pskowronek.github.io/epaper-clock-and-more/www/assembled/index.html "Photos of assembled epaper + rasberry pi zero running epaper-clock-and-more").
 
 
 ## Hardware Requirements
@@ -33,7 +33,7 @@ More photos of assembled e-paper 2.7inch + Raspberry Pi zero enclosed in LEGO en
 - enable and configure WiFi before you start the system - more [here](https://howchoo.com/g/ndy1zte2yjn/how-to-set-up-wifi-on-your-raspberry-pi-without-ethernet)
 - find the IP of RPi by scanning you local network or take a look at your router to find a new device connected to your network
 - SSH to your raspberry: ssh pi@10.20.30.40
-- python should be already present, you may want to verify this by running: ```python --version```
+- python 2.7 should be already present, you may want to verify this by running: ```python --version```
 - install git: ```sudo apt install git```
 - issue this command to fetch this project: ```git clone https://github.com/pskowronek/epaper-clock-and-more.git```
 - go to project directory: ```cd epaper-clock-and-more``` and install required python modules: ```pip install -r requirements.txt```
@@ -43,7 +43,7 @@ More photos of assembled e-paper 2.7inch + Raspberry Pi zero enclosed in LEGO en
   - a key for traffic information from Google Maps - you can get it [here](https://developers.google.com/maps/documentation/embed/get-api-key) *)
   - a key for weather forecast from DarkSky.net - you can get it [here](https://darksky.net/dev/register) *)
   - a key for Air Quality Index data from Airly.eu - you can get it [here](https://developer.airly.eu/register) *)
-  - type of e-paper device, whether is it 2.7 or 4.2 (by default it is pre-configured for 2.7" BWR)
+  - type of e-paper device, whether is is 2.7 or 4.2 (by default it is pre-configured for 2.7" BWR)
 - run the script: ```./run-clock.sh``` (hit Ctrl-C to exit)
 
 *) Data are being fetched every 10 minutes so they should comply with developer free accounts limitations.
@@ -61,12 +61,12 @@ E-paper 2.7inch by Waveshare does not support partial refresh and every modifica
 
 ## TODOs
 
-- better support for button key press (to avoid multiple action execution if you press the button too long)
-- rework drawing.py
+- better support for a button key press (to avoid multiple action execution if you press a button too long)
+- rework drawing.py (make it a class and gagues rendered w/o knowledge about their final placement)
 - configurable cache per data provider
-- add system info (executed by 4th button)
+- implement system info (executed by 4th button)
 - better time/delay handling to refresh every 60s (use scheduler)
-- detailed info executed by key press should be kept on screen for some amount of time (now the clock update closes/repaints the info)
+- detailed info executed by a key press should be kept on screen for some amount of time (now the clock update closes/repaints the info)
 - service script and instructions to launch epaper-clock-and-more on system start
 
 ## License
