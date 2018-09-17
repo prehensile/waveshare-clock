@@ -59,6 +59,7 @@ def main():
         clock.display_main_screen(utc_dt.astimezone(get_localzone()))
         time.sleep(60)  # TODO use scheduler
 
+
 def shutdown_hook():
     logging.info("You are now leaving the Python sector - the app is being shutdown.")
     if clock is not None:
