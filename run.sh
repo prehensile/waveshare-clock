@@ -1,9 +1,18 @@
 #!/bin/bash
 
-# comment out 2 lines below when you configurate the environment variables
+# This script is to either:
+# - test and trial run epaper-clock-and-more manually
+# - be luanched by provided epaper.service (that must be registered under /etc/init.d - it may vary depending what distribution you use)
+
+
+# WARNING WARNING WARNING
+# comment out the following 2 lines when you configured the environment variables below
 echo "Please edit and configure this script for your needs"
 exit 1
 
+# Developer debug mode - no epaper device is required to develop or debug - the output that is originally 
+# sent to device is being saved as bmp files here: /tmp/epaper*.bmp
+#EPAPER_DEBUG_MODE=no
 
 # Lat & lon of your home (a base point)
 export LAT=50.0720519

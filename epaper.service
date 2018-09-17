@@ -1,0 +1,16 @@
+[Unit]
+Description=epaper-clock-and-more
+After=network.target
+Restart=always
+
+[Service]
+ExecStart=/bin/bash run.sh
+RootDirectory=/home/pi/epaper-clock-and-more
+WorkingDirectory=/home/pi/epaper-clock-and-more
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

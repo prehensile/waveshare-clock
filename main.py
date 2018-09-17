@@ -40,7 +40,7 @@ from tzlocal import get_localzone
 from paperclock import PaperClock
 
 
-DEBUG_MODE = os.environ.get("CLOCK_DEBUG", "no") == "yes"
+DEBUG_MODE = os.environ.get("EPAPER_DEBUG_MODE", "no") == "yes"
 clock = None
 
 

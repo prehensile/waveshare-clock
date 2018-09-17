@@ -64,7 +64,7 @@ class PaperClock(object):
 
     def display(self, black_buf, red_buf, name):
         if self._debug_mode:
-            debug_output = "/tmp/paperclock-" + ( name.strftime("%H-%M-%S") if type(name) is not str else name )
+            debug_output = "/tmp/epaper-" + ( name.strftime("%H-%M-%S") if type(name) is not str else name )
             logging.info("Debug mode - saving screen output to: " + debug_output + "* bmps")
             black_buf.save(debug_output + "_bw_frame.bmp")
             red_buf.save(debug_output + "_red_frame.bmp")

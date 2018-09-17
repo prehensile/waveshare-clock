@@ -39,14 +39,20 @@ More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry
 - install git: ```sudo apt install git```
 - issue this command to fetch this project: ```git clone https://github.com/pskowronek/epaper-clock-and-more.git```
 - go to project directory: ```cd epaper-clock-and-more``` and install required python modules: ```pip install -r requirements.txt```
-- edit run-clock.sh and configure:
+- edit run.sh and configure:
   - your home location (lon & lat)
   - two destinations to check traffic delays
   - a key for traffic information from Google Maps - you can get it [here](https://developers.google.com/maps/documentation/embed/get-api-key) *)
   - a key for weather forecast from DarkSky.net - you can get it [here](https://darksky.net/dev/register) *)
   - a key for Air Quality Index data from Airly.eu - you can get it [here](https://developer.airly.eu/register) *)
   - type of e-paper device, whether is is 2.7 or 4.2 (by default it is pre-configured for 2.7" BWR)
-- run the script: ```./run-clock.sh``` (hit Ctrl-C to exit)
+- run the script: ```./run-clock.sh``` (hit Ctrl-C to exit) and verify if it works as expected
+- install this project as service so it could automatically run when Raspberry boots up (more details [here](https://www.raspberrypi.org/documentation/linux/usage/systemd.md))
+  - copy epaper.service to /etc/systemd/system: ```sudo cp epaper.service /etc/systemd/system/```
+  - verify if service works by invoking the following command: ```sudo systemctl start epaper.service```
+  - enable this script so it could be run on system start: ```sudo systemctl enable epaper.service```
+  - reboot device to see verify if it works
+  - logs can be found in /var/log/syslog
 
 *) Data are being fetched every 10 minutes so they should comply with developer free accounts limitations.
 
