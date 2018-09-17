@@ -154,4 +154,3 @@ class PaperClock(object):
 
             self._str_time = formatted
 
-        time.sleep(60)

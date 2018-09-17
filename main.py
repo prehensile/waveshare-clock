@@ -54,9 +54,9 @@ def main():
         Buttons(clock)
 
     while True:
-        utc_dt = datetime.now(timezone('UTC'))
+        utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in clock itself (probably using acquire.py w/o caching)
         clock.display_main_screen(utc_dt.astimezone(get_localzone()))
-
+        time.sleep(60)  # TODO use scheduler
 
 def shutdown_hook():
     logging.info("You are now leaving the Python sector - the app is being shutdown.")
