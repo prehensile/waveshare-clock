@@ -15,13 +15,13 @@ CANVAS_HEIGHT = 300
 
 def draw_text(x, y, text, font_size, draw):
     font = ImageFont.truetype('./font/default', font_size)
-    draw.text((x, y), text, font=font, fill=0)
+    draw.text((x, y), unicode(text, "utf-8"), font=font, fill=0)
 
 
 def draw_temp(center_x, y, temp, temp_size, deg_size, deg_offset, draw):
     font = ImageFont.truetype('./font/default', temp_size)
     text_width = font.getsize(temp)
-    draw.text((center_x - (text_width[0] / 2), y), temp, font=font, fill=255)
+    draw.text((center_x - (text_width[0] / 2), y), unicode(temp, "utf-8"), font=font, fill=255)
 
     point_width = font.getsize(u'°')
 
@@ -92,7 +92,7 @@ def draw_text_aqi(x, y, text, text_size, draw):
     if font_width[0] > 100:
         font = ImageFont.truetype('./font/default', text_size * 2 / 3)
 
-    draw.text((x, y), text, font=font, fill=255)
+    draw.text((x, y), unicode(text, "utf-8"), font=font, fill=255)
 
 
 def draw_text_eta(x, y, text, text_size, draw):    
@@ -108,7 +108,7 @@ def draw_text_eta(x, y, text, text_size, draw):
     if font_width[0] > 100:
         font = ImageFont.truetype('./font/default', text_size * 2 / 4)
 
-    draw.text((x, y), text, font=font, fill=255)
+    draw.text((x, y), unicode(text, "utf-8"), font=font, fill=255)
 
 
 def draw_airly(black_buf, red_buf, airly):
@@ -155,7 +155,7 @@ def draw_airly_details(airly):
     draw_text(10, 60, "PM 2.5: {}, PM 10: {}".format(airly.pm25, airly.pm10), 30, draw)
     draw_text(10, 90, "AQI: {}, level: {}".format(airly.aqi, airly.level), 30, draw)
     draw_text(10, 120, "Advice:", 30, draw)
-    draw_text(10, 150, airly.advice, 25, draw)
+    draw_text(10, 150, airly.advice.encode('utf-8'), 25, draw)
     draw_text(10, 200, "Hummidity: {}".format(airly.hummidity), 30, draw)
     draw_text(10, 230, "Pressure:  {}".format(airly.pressure), 30, draw)
 
@@ -168,7 +168,6 @@ def draw_gmaps_details(gmaps1, gmaps2):
     draw = ImageDraw.Draw(black_buf)
     draw_text(10, 10, "Traffic info by Google", 35, draw)
 
-    # TODO FIX UTF-8 issue (font? encoding?)
     draw_text(10, 60, "From: {}".format(gmaps1.origin_address.encode('utf-8')), 25, draw)
     draw_text(10, 120, "To #1: {}".format(gmaps1.destination_address.encode('utf-8')), 25, draw)
     draw_text(10, 150, "{}, avg: {}m, now: {}m".format(gmaps1.distance, gmaps1.time_to_dest / 60, gmaps1.time_to_dest_in_traffic / 60), 30, draw)

@@ -12,7 +12,7 @@ exit 1
 
 # Developer debug mode - no epaper device is required to develop or debug - the output that is originally 
 # sent to device is being saved as bmp files here: /tmp/epaper*.bmp
-#EPAPER_DEBUG_MODE=no
+#export EPAPER_DEBUG_MODE=true
 
 # Experimental modification of LUT tables that form waveforms that refresh "pixels" - implemented only for 2.7" displays.
 # This modification makes refresh about 10 times faster for black die, and 2-3 times faster for red die. This of course has
