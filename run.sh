@@ -14,6 +14,13 @@ exit 1
 # sent to device is being saved as bmp files here: /tmp/epaper*.bmp
 #EPAPER_DEBUG_MODE=no
 
+# Experimental modification of LUT tables that form waveforms that refresh "pixels" - implemented only for 2.7" displays.
+# This modification makes refresh about 10 times faster for black die, and 2-3 times faster for red die. This of course has
+# consequences in not-so ideal refresh and with time some random artifacts may start to build up. To recover you would need
+# to turn this feature off for some time until original LUT tables won't remove those artifacts.
+# Enable this feature on your own responsibility!
+#export EPAPER_FAST_REFRESH=true
+
 # Lat & lon of your home (a base point)
 export LAT=50.0720519
 export LON=20.0373204
@@ -43,13 +50,13 @@ export SECOND_TIME_WARN_ABOVE_PERCENT=50
 # This env var will be evaluated by python - so becareful, first: don't expose this env to outside world (security), second: follow the syntax otherwise program will die
 #export DEAD_TIMES="[range(1,5),range(10,15)]"
 
-# A type of EPAPER display you want to use - either Waveshare 4"2 (b&w) or 2"7 (tri-color) - this automatically sets EPAPER_MONO to True for 2"7 and to False for 4"2
+# A type of EPAPER display you want to use - either Waveshare 4"2 (b&w) or 2"7 (tri-color) - this automatically sets EPAPER_MONO to "true" for 2"7 and to "false" for 4"2
 #export EPAPER_TYPE=waveshare-4.2
 export EPAPER_TYPE=waveshare-2.7
 # You can override the setting as whether the display is mono or not - though, it will require update (replacement) of relevant epdXinX.py library to support mono or tri-color
-#export EPAPER_MONO=True
+#export EPAPER_MONO=true
 # You can override whether to listen for button press (enabled by default)
-#export EPAPER_BUTTONS_ENABLED=True
+#export EPAPER_BUTTONS_ENABLED=true
 # You can override GPIO pins assigned to buttons (these values are set by default and reflect 2.7" HUT version)
 #export EPAPER_GPIO_PIN_FOR_KEY1=5
 #export EPAPER_GPIO_PIN_FOR_KEY2=6

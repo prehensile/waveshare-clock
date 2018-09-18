@@ -50,7 +50,7 @@ def main():
     clock = PaperClock(debug_mode=DEBUG_MODE)
     atexit.register(shutdown_hook)
     
-    if not DEBUG_MODE and os.environ.get("EPAPER_BUTTONS_ENABLED", "yes"):
+    if not DEBUG_MODE and (os.environ.get("EPAPER_BUTTONS_ENABLED", "true") == "true"):
         from buttons import Buttons
         Buttons(clock)
 

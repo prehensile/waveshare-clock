@@ -33,7 +33,8 @@ else:
     raise Exception('Incorrect epaper screen type: ' + DEVICE_TYPE)
 
 
-MONO_DISPLAY = bool(os.environ.get("EPAPER_MONO", MONO_DISPLAY))   # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is tri-color, 4.2 is mono
+MONO_DISPLAY = os.environ.get("EPAPER_MONO", MONO_DISPLAY) == "true"  # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is tri-color, 4.2 is mono
+FAST_REFRESH = os.environ.get("EPAPER_FAST_REFRESH", "false") == "true"
 
 
 class PaperClock(object):
@@ -49,8 +50,13 @@ class PaperClock(object):
         self._debug_mode = debug_mode
         if not debug_mode:
             if DEVICE_TYPE == 'waveshare-2.7':
-                import epd2in7
-                self._epd = epd2in7.EPD()
+                if FAST_REFRESH:
+                    logging.info("Using experimental LUT tables!")
+                    import epd2in7b_fast_lut
+                    self._epd = epd2in7b_fast_lut.EPD()
+                else:
+                    import epd2in7b
+                    self._epd = epd2in7b.EPD()
             elif DEVICE_TYPE == 'waveshare-4.2':
                 import epd4in2
                 self._epd = epd4in2.EPD()

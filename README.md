@@ -69,6 +69,19 @@ Since the original project supported 4.2inch B&W displays only, the code has bee
 
 E-paper 2.7inch by Waveshare does not support partial refresh and every modification of displayed data requires full refresh which takes around 5s meantime flickering a lot.
 
+### 2.7inch display refresh made faster
+
+You may try to turn on experimental feature to make display refresh much faster (10x quicker for black die, 2-3 times quicker for red die).
+This has been achieved by modification of LUT tables of original ```epd2in7b.py``` Waveshare library. The LUT tables are used by the display
+to create "waveforms" that refresh every pixel. This of course has negative consequences - the refresh isn't perfect (but still okey) and
+artifacts may build-up with time. To recover the display you would need to turn off this feature and run the project for a while using original LUT tables.
+To see how the tables were modified issue this command: ```diff epd2in7b.py epd2in7b_fast_lut.py```
+
+The idea of modifying the LUT tables has been described [here](http://benkrasnow.blogspot.com/2017/10/fast-partial-refresh-on-42-e-paper.html) for 4.2" displays.
+Since I don't have 4.2" display I didn't try to provide similar feature for it.
+
+To enable this feature set the following environment variable: ```export EPAPER_FAST_REFRESH=true```
+
 
 ## TODOs
 
