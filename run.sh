@@ -43,10 +43,10 @@ export SECOND_TIME_WARN_ABOVE_PERCENT=50
 # This env var will be evaluated by python - so becareful, first: don't expose this env to outside world (security), second: follow the syntax otherwise program will die
 #export DEAD_TIMES="[range(1,5),range(10,15)]"
 
-# A type of EPAPER display you want to use - either Waveshare 4"2 (mono) or 2"7 (bi-color) - this automatically sets EPAPER_MONO to True for 2"7 and to False for 4"2
+# A type of EPAPER display you want to use - either Waveshare 4"2 (b&w) or 2"7 (tri-color) - this automatically sets EPAPER_MONO to True for 2"7 and to False for 4"2
 #export EPAPER_TYPE=waveshare-4.2
 export EPAPER_TYPE=waveshare-2.7
-# You can override the setting as whether the display is mono or not - though, it will require update (replacement) of relevant epdXinX.py library to support mono or bi-color
+# You can override the setting as whether the display is mono or not - though, it will require update (replacement) of relevant epdXinX.py library to support mono or tri-color
 #export EPAPER_MONO=True
 # You can override whether to listen for button press (enabled by default)
 #export EPAPER_BUTTONS_ENABLED=True

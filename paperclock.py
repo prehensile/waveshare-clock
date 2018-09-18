@@ -33,7 +33,7 @@ else:
     raise Exception('Incorrect epaper screen type: ' + DEVICE_TYPE)
 
 
-MONO_DISPLAY = bool(os.environ.get("EPAPER_MONO", MONO_DISPLAY))   # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is bi-color, 4.2 is mono
+MONO_DISPLAY = bool(os.environ.get("EPAPER_MONO", MONO_DISPLAY))   # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is tri-color, 4.2 is mono
 
 
 class PaperClock(object):
