@@ -45,7 +45,7 @@ class Weather(Acquire):
     def get(self):
         forecast_data = self.load()
         if forecast_data is None:
-            return WeatherTuple(temp=-99, temp_min=-99, temp_max=-99, icon='n/a')
+            return WeatherTuple(temp=-99, temp_min=-99, temp_max=-99, icon='n/a', summary='n/a')
         
         d = forecast_data["daily"]["data"][0]
 
@@ -60,5 +60,4 @@ class Weather(Acquire):
             temp_max=temp_max,
             icon=d['icon'],
             summary=c['summary']
-
         )

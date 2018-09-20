@@ -65,7 +65,7 @@ class GMaps(Acquire):
     def get(self):
         gmaps_data = self.load()
         if gmaps_data is None:
-            return GMapsTuple(time_to_dest=-1, time_to_dest_in_traffic=-1)
+            return GMapsTuple(time_to_dest=-1, time_to_dest_in_traffic=-1, distance=-1, origin_address='n/a', destination_address='n/a')
 
         return GMapsTuple(
             time_to_dest=gmaps_data['rows'][0]['elements'][0]['duration']['value'],  # in seconds
