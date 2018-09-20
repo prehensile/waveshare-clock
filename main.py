@@ -31,6 +31,7 @@ import os
 import sys
 import logging
 import logging.handlers
+import signal
 import atexit
 
 import time
@@ -42,30 +43,48 @@ from paperclock import PaperClock
 
 
 DEBUG_MODE = os.environ.get("EPAPER_DEBUG_MODE", "false") == "true"
+shutting_down = False
 clock = None
 
 
 def main():
     global clock
+    global shutting_down
     clock = PaperClock(debug_mode=DEBUG_MODE)
+
     atexit.register(shutdown_hook)
+    signal.signal(signal.SIGTERM, signal_hook)
     
     if not DEBUG_MODE and (os.environ.get("EPAPER_BUTTONS_ENABLED", "true") == "true"):
         from buttons import Buttons
         Buttons(clock)
 
     while True:
+        if shutting_down:
+            break
         utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in clock itself (probably using acquire.py w/o caching)
         clock.display_main_screen(utc_dt.astimezone(get_localzone()))
         time.sleep(60)  # TODO use scheduler
 
 
+def signal_hook(*args):
+    if shutdown_hook():
+        logging.info("calling exit 0")
+        sys.exit(0) 
+
+
 def shutdown_hook():
+    global clock
+    global shutting_down
+    if shutting_down:
+        return False
+    shutting_down = True
     logging.info("You are now leaving the Python sector - the app is being shutdown.")
     if clock is not None:
         logging.info("...but, let's try to display shutdown icon")
         clock.display_shutdown()
         logging.info("...finally going down")
+    return True
 
 
 def init_logging():
