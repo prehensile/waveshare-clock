@@ -33,6 +33,7 @@ import logging
 import logging.handlers
 import signal
 import atexit
+import sdnotify
 
 import time
 from pytz import timezone
@@ -59,9 +60,13 @@ def main():
         from buttons import Buttons
         Buttons(clock)
 
+    notifier = sdnotify.SystemdNotifier()
+    notifier.notify("READY=1")
+
     while True:
         if shutting_down:
             break
+        notifier.notify("WATCHDOG=1")
         utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in clock itself (probably using acquire.py w/o caching)
         clock.display_main_screen(utc_dt.astimezone(get_localzone()))
         time.sleep(60)  # TODO use scheduler

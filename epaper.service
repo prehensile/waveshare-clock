@@ -10,6 +10,12 @@ StandardError=inherit
 Restart=always
 User=pi
 TimeoutStopSec=20s
+StartLimitInterval=5min
+StartLimitBurst=5
+StartLimitAction=reboot
+WatchdogSec=120s
+Type=notify
+NotifyAccess=all
 
 [Install]
 WantedBy=multi-user.target

@@ -2,18 +2,10 @@
 # https://github.com/damnever/pigar
 
 # drawing.py: 7
-# epd2in7.py: 28,29,30
-# paperclock.py: 8
+# epd2in7b.py: 28,29,30
+# epd2in7b_fast_lut.py: 33,34,35
+# paperclock.py: 7
 Pillow == 5.2.0
-
-# epd2in7.py: 27
-# epd4in2.py: 27
-epdif == 0.1
-
-# epd2in7.py: 31
-# epd4in2.py: 29
-# epdif.py: 28
-#fakerpigpio == 0.3a0
 
 # epd4in2.py: 28
 pil-compat == 1.0.0
@@ -21,7 +13,7 @@ pil-compat == 1.0.0
 # epd4in2.py: 28
 pillow-pil == 0.1dev
 
-# main.py: 35
+# main.py: 39
 pytz == 2018.5
 
 # airly.py: 8
@@ -29,5 +21,9 @@ pytz == 2018.5
 # weather.py: 8
 requests == 2.18.4
 
-# main.py: 37
+# main.py: 36
+sdnotify == 0.3.2
+
+# main.py: 41
 tzlocal == 1.5.1
+
