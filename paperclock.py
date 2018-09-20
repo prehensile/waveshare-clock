@@ -33,7 +33,7 @@ else:
     raise Exception('Incorrect epaper screen type: ' + DEVICE_TYPE)
 
 
-MONO_DISPLAY = os.environ.get("EPAPER_MONO", MONO_DISPLAY) == "true"  # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is tri-color, 4.2 is mono
+MONO_DISPLAY = os.environ.get("EPAPER_MONO", "true" if MONO_DISPLAY else "false") == "true"  # one may override but must replace relevant library edpXinX.py, by default lib for 2.7 is tri-color, 4.2 is mono
 FAST_REFRESH = os.environ.get("EPAPER_FAST_REFRESH", "false") == "true"
 
 
