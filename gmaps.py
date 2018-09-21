@@ -45,7 +45,7 @@ class GMaps(Acquire):
 
 
     def acquire(self):
-        logging.info("Getting time to get to dest1 from the internet...")
+        logging.info("Getting time to get to dest: {} from the internet...".format(self.name))
 
         try:
             r = requests.get(
