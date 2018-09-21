@@ -68,8 +68,7 @@ def main():
             break
         notifier.notify("WATCHDOG=1")
         utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in epaper itself (probably using acquire.py w/o caching)
-        #epaper.display_main_screen(utc_dt.astimezone(get_localzone()))
-        epaper.display_airly_details()
+        paper.display_main_screen(utc_dt.astimezone(get_localzone()))
         time.sleep(60)  # TODO use scheduler
 
 
