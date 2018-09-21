@@ -6,6 +6,7 @@
 import os 
 from PIL import Image, ImageDraw, ImageFont
 import icons
+import textwrap
 
 
 # Virtual canvas size
@@ -19,6 +20,26 @@ CELSIUS_SYMBOL = u'°'
 def draw_text(x, y, text, font_size, draw):
     font = ImageFont.truetype('./font/default', font_size)
     draw.text((x, y), unicode(text, "utf-8"), font=font, fill=0)
+    return y + font_size * 1.2  # +20%
+
+
+def draw_multiline_text(x, y, text, font_size, draw):
+    height = 0
+    font = ImageFont.truetype('./font/default', font_size)
+    text_width = font.getsize(text)
+    if text_width[0] * 1.05 > CANVAS_WIDTH:
+      break_at = len(text) * CANVAS_WIDTH / text_width[0]  # rough estimation (proportion: text width to screen size vs unknown to string len)
+      lines = textwrap.wrap(text, width=break_at)
+      line_counter = 0
+      for line in lines:
+          draw.text((x, y + line_counter * font_size * 1.1), unicode(line, "utf-8"), font=font, fill=0) 
+          line_counter += 1
+          height += font_size * 1.2
+    else:
+      draw.text((x, y), unicode(text, "utf-8"), font=font, fill=0)
+      height += font_size * 1.2
+      
+    return y + height
 
 
 def draw_temp(center_x, y, temp, temp_size, deg_size, deg_offset, draw):
@@ -157,10 +178,9 @@ def draw_airly_details(airly):
 
     draw_text(10, 60, "PM 2.5: {}, PM 10: {}".format(airly.pm25, airly.pm10), 30, draw)
     draw_text(10, 90, "AQI: {}, level: {}".format(airly.aqi, airly.level), 30, draw)
-    draw_text(10, 120, "Advice:", 30, draw)
-    draw_text(10, 150, airly.advice.encode('utf-8'), 25, draw)
-    draw_text(10, 200, "Hummidity: {}".format(airly.hummidity), 30, draw)
-    draw_text(10, 230, "Pressure:  {}".format(airly.pressure), 30, draw)
+    y = draw_multiline_text(10, 140, "Advice: {}".format(airly.advice.encode('utf-8')), 25, draw)
+    y = draw_text(10, y, "Hummidity: {}".format(airly.hummidity), 30, draw)
+    y = draw_text(10, y, "Pressure:  {}".format(airly.pressure), 30, draw)
 
     return black_buf, red_buf
 
@@ -171,12 +191,12 @@ def draw_gmaps_details(gmaps1, gmaps2):
     draw = ImageDraw.Draw(black_buf)
     draw_text(10, 10, "Traffic info by Google", 35, draw)
 
-    draw_text(10, 60, "From: {}".format(gmaps1.origin_address.encode('utf-8')), 25, draw)
-    draw_text(10, 120, "To #1: {}".format(gmaps1.destination_address.encode('utf-8')), 25, draw)
-    draw_text(10, 150, "{}, avg: {}m, now: {}m".format(gmaps1.distance, gmaps1.time_to_dest / 60, gmaps1.time_to_dest_in_traffic / 60), 30, draw)
+    y = draw_multiline_text(10, 60, "From: {}".format(gmaps1.origin_address.encode('utf-8')), 25, draw)
+    y = draw_multiline_text(10, y, "To #1: {}".format(gmaps1.destination_address.encode('utf-8')), 25, draw)
+    y = draw_text(10, y, "{}, avg: {}m, now: {}m".format(gmaps1.distance, gmaps1.time_to_dest / 60, gmaps1.time_to_dest_in_traffic / 60), 30, draw)
 
-    draw_text(10, 200, "To #2: {}".format(gmaps2.destination_address.encode('utf-8')), 25, draw)
-    draw_text(10, 230, "{}, avg: {}m, now: {}m".format(gmaps2.distance, gmaps2.time_to_dest / 60, gmaps2.time_to_dest_in_traffic / 60), 30, draw)
+    y = draw_multiline_text(10, y, "To #2: {}".format(gmaps2.destination_address.encode('utf-8')), 25, draw)
+    draw_text(10, y, "{}, avg: {}m, now: {}m".format(gmaps2.distance, gmaps2.time_to_dest / 60, gmaps2.time_to_dest_in_traffic / 60), 30, draw)
 
     return black_buf, red_buf
 
@@ -189,11 +209,8 @@ def draw_weather_details(weather):
 
     draw_text(10, 90, "Temperature: {}{}".format(weather.temp, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
     draw_text(10, 120, "Daily min: {}{}, max: {}{}".format(weather.temp_min, CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
-    draw_text(10, 150, "Summary: ", 30, draw)
-    draw_text(10, 180, "{}".format(weather.summary.encode('utf-8')), 25, draw)
-
-    draw_text(10, 210, "Forecast: ", 30, draw)
-    draw_text(10, 240, "{}".format(weather.forecast_summary.encode('utf-8')), 20, draw)
+    y = draw_multiline_text(10, 180, "Daily summary: {}".format(weather.summary.encode('utf-8')), 25, draw)
+    draw_multiline_text(10, y, "Forecast: {}".format(weather.forecast_summary.encode('utf-8')), 25, draw)
 
     return black_buf, red_buf
 
