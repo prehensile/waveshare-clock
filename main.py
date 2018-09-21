@@ -60,10 +60,10 @@ def main():
         from buttons import Buttons
         Buttons(
             epaper,
-            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY1", "5"),
-            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY2", "6"),
-            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY3", "13"),
-            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY4", "19")
+            int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY1", "5")),
+            int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY2", "6")),
+            int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY3", "13")),
+            int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY4", "19"))
         )
 
     notifier = sdnotify.SystemdNotifier()
