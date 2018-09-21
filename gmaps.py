@@ -4,7 +4,6 @@
 from acquire import Acquire
 
 import logging
-import os
 import requests
 from collections import namedtuple
 
@@ -15,9 +14,12 @@ GMapsTuple = namedtuple('Gmaps', ['time_to_dest', 'time_to_dest_in_traffic', 'di
 class GMaps(Acquire):
     
 
-    def __init__(self, lat, lon, name):
-        self.lat = lat
-        self.lon = lon
+    def __init__(self, key, home_lat, home_lon, dest_lat, dest_lon, name):
+        self.key = key
+        self.home_lat = home_lat
+        self.home_lon = home_lon
+        self.dest_lat = dest_lat
+        self.dest_lon = dest_lon
         self.name = name
 
 
@@ -48,11 +50,11 @@ class GMaps(Acquire):
         try:
             r = requests.get(
                 "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&departure_time=now&origins={},{}&destinations={},{}&key={}".format(
-                    os.environ.get("LAT"),             # move it to c-tor (and the same for other impls of acquire)
-                    os.environ.get("LON"),             # move it to c-tor (and the same for other impls of acquire)
-                    self.lat,
-                    self.lon,
-                    os.environ.get("GOOGLE_MAPS_KEY")  # move it to c-tor (and the same for other impls of acquire)
+                    self.home_lat,
+                    self.home_lon,
+                    self.dest_lat,
+                    self.dest_lon,
+                    self.key
                 ),
             )
             return r

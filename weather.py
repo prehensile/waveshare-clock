@@ -3,7 +3,6 @@
 
 from acquire import Acquire
 
-import os
 import logging
 import requests
 from collections import namedtuple
@@ -15,8 +14,18 @@ WeatherTuple = namedtuple('Weather', ['temp', 'temp_min', 'temp_max', 'icon', 's
 class Weather(Acquire):
 
 
+    def __init__(self, key, lat, lon):
+        self.key = key
+        self.lat = lat
+        self.lon = lon
+
+
     def cache_name(self):
         return "darksky.json"
+
+
+    def ttl(self):
+        return 20  # minutes
 
 
     def acquire(self):
@@ -25,9 +34,9 @@ class Weather(Acquire):
         try:
             r = requests.get(
                 "https://api.darksky.net/forecast/{}/{},{}".format(
-                    os.environ.get("DARKSKY_KEY"),
-                    os.environ.get("LAT"),
-                    os.environ.get("LON")
+                    self.key,
+                    self.lat,
+                    self.lon
                 ),
                 params = {
                     "units" : "si",

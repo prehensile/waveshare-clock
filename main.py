@@ -58,7 +58,13 @@ def main():
     
     if not DEBUG_MODE and (os.environ.get("EPAPER_BUTTONS_ENABLED", "true") == "true"):
         from buttons import Buttons
-        Buttons(epaper)
+        Buttons(
+            epaper,
+            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY1", "5"),
+            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY2", "6"),
+            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY3", "13"),
+            os.environ.get("EPAPER_GPIO_PIN_FOR_KEY4", "19")
+        )
 
     notifier = sdnotify.SystemdNotifier()
     notifier.notify("READY=1")
@@ -68,7 +74,7 @@ def main():
             break
         notifier.notify("WATCHDOG=1")
         utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in epaper itself (probably using acquire.py w/o caching)
-        paper.display_main_screen(utc_dt.astimezone(get_localzone()))
+        epaper.display_main_screen(utc_dt.astimezone(get_localzone()))
         time.sleep(60)  # TODO use scheduler
 
 

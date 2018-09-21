@@ -22,6 +22,10 @@ class Acquire(object):
         return os.path.join(pth_cache, self.cache_name())
 
 
+    def ttl(self):
+        return 10  # default 10 minutes
+
+
     def load_cached(self):
         fn_cache = self.cache_path()
         if os.path.exists(fn_cache):
@@ -80,10 +84,10 @@ class Acquire(object):
             # get last modified time for cache...
             ts_cache = self.get_cache_ts()
 
-            # refresh every 10 minutes
+            # refresh every TTL in minutes
             if ts_cache is not None:
                 now = time.time()
-                if (now - ts_cache) > 60 * 10:  # every 10 mins
+                if (now - ts_cache) > 60 * self.ttl():
                     logging.info("Cache too old, renewing...")
                     acquired_data = self.load_and_cache()
 

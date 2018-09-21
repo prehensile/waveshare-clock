@@ -1,20 +1,18 @@
 # https://github.com/pskowronek/epaper-clock-and-more, Apache 2 license
 
 import logging
-import os
 import RPi.GPIO as GPIO
 
 
 class Buttons(object):
 
-    key1 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY1", "5"))
-    key2 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY2", "6"))
-    key3 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY3", "13"))
-    key4 = int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY4", "19"))
 
-
-    def __init__(self, epaper):
+    def __init__(self, epaper, key1, key2, key3, key4):
         self.epaper = epaper
+        self.key1 = key1
+        self.key2 = key2
+        self.key3 = key3
+        self.key4 = key4
         self.register()
 
 

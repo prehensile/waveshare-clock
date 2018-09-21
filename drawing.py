@@ -28,16 +28,16 @@ def draw_multiline_text(x, y, text, font_size, draw):
     font = ImageFont.truetype('./font/default', font_size)
     text_width = font.getsize(text)
     if text_width[0] * 1.05 > CANVAS_WIDTH:
-      break_at = len(text) * CANVAS_WIDTH / text_width[0]  # rough estimation (proportion: text width to screen size vs unknown to string len)
-      lines = textwrap.wrap(text, width=break_at)
-      line_counter = 0
-      for line in lines:
-          draw.text((x, y + line_counter * font_size * 1.1), unicode(line, "utf-8"), font=font, fill=0) 
-          line_counter += 1
-          height += font_size * 1.2
+        break_at = len(text) * CANVAS_WIDTH / text_width[0]  # rough estimation (proportion: text width to screen size vs unknown to string len)
+        lines = textwrap.wrap(text, width=break_at)
+        line_counter = 0
+        for line in lines:
+            draw.text((x, y + line_counter * font_size * 1.1), unicode(line, "utf-8"), font=font, fill=0)
+            line_counter += 1
+            height += font_size * 1.2
     else:
-      draw.text((x, y), unicode(text, "utf-8"), font=font, fill=0)
-      height += font_size * 1.2
+        draw.text((x, y), unicode(text, "utf-8"), font=font, fill=0)
+        height += font_size * 1.2
       
     return y + height
 
@@ -50,7 +50,7 @@ def draw_temp(center_x, y, temp, temp_size, deg_size, deg_offset, draw):
     point_width = font.getsize(CELSIUS_SYMBOL)
 
     font = ImageFont.truetype('./font/default', deg_size)
-    draw.text((center_x + (text_width[0] / 2) - point_width[0] / 2 + 10, y + deg_offset), CELSIUS_SYMBOL, font=font, fill=255)
+    draw.text((center_x + (text_width[0] / 2) - point_width[0] / 2 + 12, y + deg_offset), CELSIUS_SYMBOL, font=font, fill=255)
 
 
 def draw_small_temp(center_x, y, caption, draw):

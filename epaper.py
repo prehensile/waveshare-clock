@@ -39,10 +39,32 @@ FAST_REFRESH = os.environ.get("EPAPER_FAST_REFRESH", "false") == "true"
 
 class EPaper(object):
 
-    airly = Airly()
-    weather = Weather()
-    gmaps1 = GMaps(os.environ.get("FIRST_TIME_TO_DESTINATION_LAT"), os.environ.get("FIRST_TIME_TO_DESTINATION_LON"), "first")
-    gmaps2 = GMaps(os.environ.get("SECOND_TIME_TO_DESTINATION_LAT"), os.environ.get("SECOND_TIME_TO_DESTINATION_LON"), "second")
+    airly = Airly(
+        os.environ.get("AIRLY_KEY"),
+        os.environ.get("LAT"),
+        os.environ.get("LON"),
+    )
+    weather = Weather(
+        os.environ.get("DARKSKY_KEY"),
+        os.environ.get("LAT"),
+        os.environ.get("LON"),
+    )
+    gmaps1 = GMaps(
+        os.environ.get("GOOGLE_MAPS_KEY"),
+        os.environ.get("LAT"),
+        os.environ.get("LON"),
+        os.environ.get("FIRST_TIME_TO_DESTINATION_LAT"),
+        os.environ.get("FIRST_TIME_TO_DESTINATION_LON"),
+        "first"
+    )
+    gmaps2 = GMaps(
+        os.environ.get("GOOGLE_MAPS_KEY"),
+        os.environ.get("LAT"),
+        os.environ.get("LON"),
+        os.environ.get("SECOND_TIME_TO_DESTINATION_LAT"),
+        os.environ.get("SECOND_TIME_TO_DESTINATION_LON"),
+        "second"
+    )
 
 
     def __init__(self, debug_mode = False):

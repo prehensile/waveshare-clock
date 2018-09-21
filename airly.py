@@ -4,7 +4,6 @@
 from acquire import Acquire
 
 import logging
-import os
 import requests
 from collections import namedtuple
 
@@ -15,8 +14,18 @@ AirlyTuple = namedtuple('Airly', ['pm25', 'pm10', 'hummidity', 'pressure', 'aqi'
 class Airly(Acquire):
 
 
+    def __init__(self, key, lat, lon):
+        self.key = key
+        self.lat = lat
+        self.lon = lon
+
+
     def cache_name(self):
         return "airly.json"
+
+
+    def ttl(self):
+        return 15  # minutes
 
 
     def acquire(self):
@@ -25,11 +34,11 @@ class Airly(Acquire):
         try:
             r = requests.get(
                 "https://airapi.airly.eu/v2/measurements/point?indexType=AIRLY_CAQI&lat={}&lng={}".format(
-                    os.environ.get("LAT"),
-                    os.environ.get("LON")
+                    self.lat,
+                    self.lon
                 ),
                 headers = {
-                    "apikey" : os.environ.get("AIRLY_KEY"),
+                    "apikey" : self.key,
                     "Accept-Language" : "en",
                     "Accept" : "application/json"
                 }
