@@ -12,6 +12,9 @@ import icons
 CANVAS_WIDTH = 400
 CANVAS_HEIGHT = 300
 
+# Celcius symbol
+CELSIUS_SYMBOL = u'°'
+
 
 def draw_text(x, y, text, font_size, draw):
     font = ImageFont.truetype('./font/default', font_size)
@@ -23,10 +26,10 @@ def draw_temp(center_x, y, temp, temp_size, deg_size, deg_offset, draw):
     text_width = font.getsize(temp)
     draw.text((center_x - (text_width[0] / 2), y), unicode(temp, "utf-8"), font=font, fill=255)
 
-    point_width = font.getsize(u'°')
+    point_width = font.getsize(CELSIUS_SYMBOL)
 
     font = ImageFont.truetype('./font/default', deg_size)
-    draw.text((center_x + (text_width[0] / 2) - point_width[0] / 2 + 10, y + deg_offset), u'°', font=font, fill=255)
+    draw.text((center_x + (text_width[0] / 2) - point_width[0] / 2 + 10, y + deg_offset), CELSIUS_SYMBOL, font=font, fill=255)
 
 
 def draw_small_temp(center_x, y, caption, draw):
@@ -184,10 +187,13 @@ def draw_weather_details(weather):
     draw = ImageDraw.Draw(black_buf)
     draw_text(10, 10, "Weather by DarkSky.net", 35, draw)
 
-    draw_text(10, 90, "Temperature: {}".format(weather.temp), 30, draw)
-    draw_text(10, 120, "Daily min: {}, max: {}".format(weather.temp_min, weather.temp_max), 30, draw)
+    draw_text(10, 90, "Temperature: {}{}".format(weather.temp, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
+    draw_text(10, 120, "Daily min: {}{}, max: {}{}".format(weather.temp_min, CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
     draw_text(10, 150, "Summary: ", 30, draw)
     draw_text(10, 180, "{}".format(weather.summary.encode('utf-8')), 25, draw)
+
+    draw_text(10, 210, "Forecast: ", 30, draw)
+    draw_text(10, 240, "{}".format(weather.forecast_summary.encode('utf-8')), 20, draw)
 
     return black_buf, red_buf
 

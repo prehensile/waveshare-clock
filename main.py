@@ -40,25 +40,25 @@ from pytz import timezone
 from datetime import datetime
 from tzlocal import get_localzone
 
-from paperclock import PaperClock
+from epaper import EPaper
 
 
 DEBUG_MODE = os.environ.get("EPAPER_DEBUG_MODE", "false") == "true"
 shutting_down = False
-clock = None
+epaper = None
 
 
 def main():
-    global clock
+    global epaper
     global shutting_down
-    clock = PaperClock(debug_mode=DEBUG_MODE)
+    epaper = EPaper(debug_mode=DEBUG_MODE)
 
     atexit.register(shutdown_hook)
     signal.signal(signal.SIGTERM, signal_hook)
     
     if not DEBUG_MODE and (os.environ.get("EPAPER_BUTTONS_ENABLED", "true") == "true"):
         from buttons import Buttons
-        Buttons(clock)
+        Buttons(epaper)
 
     notifier = sdnotify.SystemdNotifier()
     notifier.notify("READY=1")
@@ -67,8 +67,8 @@ def main():
         if shutting_down:
             break
         notifier.notify("WATCHDOG=1")
-        utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in clock itself (probably using acquire.py w/o caching)
-        clock.display_main_screen(utc_dt.astimezone(get_localzone()))
+        utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in epaper itself (probably using acquire.py w/o caching)
+        epaper.display_main_screen(utc_dt.astimezone(get_localzone()))
         time.sleep(60)  # TODO use scheduler
 
 
@@ -79,15 +79,15 @@ def signal_hook(*args):
 
 
 def shutdown_hook():
-    global clock
+    global epaper
     global shutting_down
     if shutting_down:
         return False
     shutting_down = True
     logging.info("You are now leaving the Python sector - the app is being shutdown.")
-    if clock is not None:
+    if epaper is not None:
         logging.info("...but, let's try to display shutdown icon")
-        clock.display_shutdown()
+        epaper.display_shutdown()
         logging.info("...finally going down")
     return True
 
@@ -101,7 +101,7 @@ def init_logging():
     
     if not DEBUG_MODE:
         log_address = '/var/run/syslog' if sys.platform == 'darwin' else '/dev/log'
-        formatter = logging.Formatter('PaperClock: %(message)s')
+        formatter = logging.Formatter('EPaper: %(message)s')
         handler = logging.handlers.SysLogHandler(address=log_address)
         handler.setFormatter(formatter)
 

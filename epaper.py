@@ -37,7 +37,7 @@ MONO_DISPLAY = os.environ.get("EPAPER_MONO", "true" if MONO_DISPLAY else "false"
 FAST_REFRESH = os.environ.get("EPAPER_FAST_REFRESH", "false") == "true"
 
 
-class PaperClock(object):
+class EPaper(object):
 
     airly = Airly()
     weather = Weather()
@@ -75,11 +75,13 @@ class PaperClock(object):
             return
 
         if not MONO_DISPLAY:
+            logging.info("Going to display a new tri-color image...")
             self._epd.display_frame(
                 self._epd.get_frame_buffer(black_buf),
                 self._epd.get_frame_buffer(red_buf)
             )
         else:
+            logging.info("Going to display a new mono-color image...")
             self._epd.display_frame(
                 self._epd.get_frame_buffer(black_buf)
             )
@@ -103,17 +105,17 @@ class PaperClock(object):
 
 
     def display_airly_details(self):
-        black_frame, red_frame = drawing.draw_airly_details(PaperClock.airly.get())
+        black_frame, red_frame = drawing.draw_airly_details(EPaper.airly.get())
         self.display_buffer(black_frame, red_frame, 'airly')
 
 
     def display_gmaps_details(self):
-        black_frame, red_frame = drawing.draw_gmaps_details(PaperClock.gmaps1.get(), PaperClock.gmaps2.get())
+        black_frame, red_frame = drawing.draw_gmaps_details(EPaper.gmaps1.get(), EPaper.gmaps2.get())
         self.display_buffer(black_frame, red_frame, 'gmaps')
 
 
     def display_weather_details(self):
-        black_frame, red_frame = drawing.draw_weather_details(PaperClock.weather.get())
+        black_frame, red_frame = drawing.draw_weather_details(EPaper.weather.get())
         self.display_buffer(black_frame, red_frame, 'weather')
 
 
@@ -134,16 +136,16 @@ class PaperClock(object):
 
         if formatted != self._str_time:
 
-            weather_data = PaperClock.weather.get()
+            weather_data = EPaper.weather.get()
             logging.info("--- weather: " + json.dumps(weather_data))
 
-            airly_data = PaperClock.airly.get()
+            airly_data = EPaper.airly.get()
             logging.info("--- airly: " + json.dumps(airly_data))
 
-            gmaps1_data = PaperClock.gmaps1.get()
+            gmaps1_data = EPaper.gmaps1.get()
             logging.info("--- gmaps1: " + json.dumps(gmaps1_data))
 
-            gmaps2_data = PaperClock.gmaps2.get()
+            gmaps2_data = EPaper.gmaps2.get()
             logging.info("--- gmaps2: " + json.dumps(gmaps2_data))
 
             black_frame, red_frame = drawing.draw_frame(
