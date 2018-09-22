@@ -14,10 +14,11 @@ WeatherTuple = namedtuple('Weather', ['temp', 'temp_min', 'temp_max', 'icon', 's
 class Weather(Acquire):
 
 
-    def __init__(self, key, lat, lon):
+    def __init__(self, key, lat, lon, cache_ttl):
         self.key = key
         self.lat = lat
         self.lon = lon
+        self.cache_ttl = cache_ttl
 
 
     def cache_name(self):
@@ -25,7 +26,7 @@ class Weather(Acquire):
 
 
     def ttl(self):
-        return 20  # minutes
+        return self.cache_ttl
 
 
     def acquire(self):

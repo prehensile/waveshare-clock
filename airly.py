@@ -14,10 +14,11 @@ AirlyTuple = namedtuple('Airly', ['pm25', 'pm10', 'hummidity', 'pressure', 'aqi'
 class Airly(Acquire):
 
 
-    def __init__(self, key, lat, lon):
+    def __init__(self, key, lat, lon, cache_ttl):
         self.key = key
         self.lat = lat
         self.lon = lon
+        self.cache_ttl = cache_ttl
 
 
     def cache_name(self):
@@ -25,7 +26,7 @@ class Airly(Acquire):
 
 
     def ttl(self):
-        return 15  # minutes
+        return self.cache_ttl
 
 
     def acquire(self):

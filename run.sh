@@ -32,6 +32,12 @@ export DARKSKY_KEY=GET_YOUR_OWN_KEY         # get the key from: https://darksky.
 # A key for AQI (Air Quality Index) from AIRLY.EU API (data for certain countries only, as yet, but you may order their device to provide data also for your neighbours)
 export AIRLY_KEY=GET_YOUR_OWN_KEY           # get the key from: https://developer.airly.eu/register
 
+# Cache TTLs in minutes for each data fetcher (refer to free accounts limitations before you change the values any lower than 10m)
+#export GOOGLE_MAPS_TTL=10
+#export DARKSKY_TTL=15
+#export AIRLY_TTL=20
+
+
 export AQI_WARN_LEVEL=75                    # above this value the displayed gauge will become red (on supported displays)
 
 # Lat & lon of destination you want to calculate the current driving time including traffic

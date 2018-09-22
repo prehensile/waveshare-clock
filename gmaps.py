@@ -14,17 +14,22 @@ GMapsTuple = namedtuple('Gmaps', ['time_to_dest', 'time_to_dest_in_traffic', 'di
 class GMaps(Acquire):
     
 
-    def __init__(self, key, home_lat, home_lon, dest_lat, dest_lon, name):
+    def __init__(self, key, home_lat, home_lon, dest_lat, dest_lon, name, cache_ttl):
         self.key = key
         self.home_lat = home_lat
         self.home_lon = home_lon
         self.dest_lat = dest_lat
         self.dest_lon = dest_lon
         self.name = name
+        self.cache_ttl = cache_ttl
 
 
     def cache_name(self):
         return "gmaps-{}.json".format(self.name)
+
+
+    def ttl(self):
+        return self.cache_ttl
 
 
     def error_found(self, response):

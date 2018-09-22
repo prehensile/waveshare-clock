@@ -55,7 +55,7 @@ More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry
   - if you needed to modify epaper.service issue this command: ```sudo systemctl daemon-reload```
   - logs can be observed in /var/log/syslog: ```sudo tail -f /var/log/syslog | grep run.sh```
 
-*) Data are being fetched every 10 minutes so they should comply with developer free accounts limitations
+*) By default data are being fetched every 10+ minutes so they should comply with developer free accounts limitations
 
 **) If your project directory is different than /home/pi/epaper-clock-and-more then you must edit this file to reflect the correct path
 
@@ -87,7 +87,6 @@ To enable this feature set the following environment variable: ```export EPAPER_
 
 - better support for a button key press (to avoid multiple action execution if you press a button too long)
 - rework drawing.py (make it a class and gagues rendered w/o knowledge about their final placement)
-- configurable cache per data provider
 - implement system info (executed by 4th button)
 - better time/delay handling to refresh every 60s (use scheduler)
 - detailed info executed by a key press should be kept on screen for some amount of time (now the clock update closes/repaints the info)

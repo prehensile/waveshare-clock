@@ -43,11 +43,13 @@ class EPaper(object):
         os.environ.get("AIRLY_KEY"),
         os.environ.get("LAT"),
         os.environ.get("LON"),
+        int(os.environ.get("AIRLY_TTL", "20"))
     )
     weather = Weather(
         os.environ.get("DARKSKY_KEY"),
         os.environ.get("LAT"),
         os.environ.get("LON"),
+        int(os.environ.get("DARKSKY_TTL", "15"))
     )
     gmaps1 = GMaps(
         os.environ.get("GOOGLE_MAPS_KEY"),
@@ -55,7 +57,8 @@ class EPaper(object):
         os.environ.get("LON"),
         os.environ.get("FIRST_TIME_TO_DESTINATION_LAT"),
         os.environ.get("FIRST_TIME_TO_DESTINATION_LON"),
-        "first"
+        "first",
+        int(os.environ.get("GOOGLE_MAPS_TTL", "10"))
     )
     gmaps2 = GMaps(
         os.environ.get("GOOGLE_MAPS_KEY"),
@@ -63,7 +66,8 @@ class EPaper(object):
         os.environ.get("LON"),
         os.environ.get("SECOND_TIME_TO_DESTINATION_LAT"),
         os.environ.get("SECOND_TIME_TO_DESTINATION_LON"),
-        "second"
+        "second",
+        int(os.environ.get("GOOGLE_MAPS_TTL", "10"))
     )
 
 
