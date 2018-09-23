@@ -19,7 +19,7 @@ class Drawing(object):
     TEMPERATURE_SYMBOL = u'°'
 
 
-    def __init__(self, storm_distance_warn, darksky_units, aqi_warn_level, primary_time_warn_above, secondary_time_warn_above):
+    def __init__(self, darksky_units, storm_distance_warn, aqi_warn_level, primary_time_warn_above, secondary_time_warn_above):
         self.distance_symbol = 'km' if darksky_units == 'si' else 'mi'
         self.storm_distance_warn = storm_distance_warn
         self.aqi_warn_level = aqi_warn_level
