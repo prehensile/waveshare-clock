@@ -10,9 +10,9 @@ This project enhances the original project to support Waveshare 2.7inch displays
 - gauges for current traffic drive times for two configured destinations (thanks to [Google Maps API](https://developers.google.com/maps/documentation/))
 - gauge for air quality index (AQI) of home location (thanks to [Airly.eu API](http://developer.airly.eu/))
 - weather gauge may display:
-  - alerts issued by governmental authorities - works for the EU, US & Canada (thanks to [DarkSky.net API](https://darksky.net/dev/docs))
+  - alerts issued by governmental authorities - it works for the EU, US & Canada (thanks to [DarkSky.net API](https://darksky.net/dev/docs))
   - warning about storms in defined vicinity (thanks to [DarkSky.net API](https://darksky.net/dev/docs))
-- button handlers to display detailed information about: weather, air quality, traffic and system information (on supported devices, i.e. 2.7inch HUT with switches)
+- buttons support to display detailed information about: weather, air quality, traffic and system information (on supported devices, i.e. 2.7inch HUT with switches)
 - font with relaxed license already included in the project
 
 For both new gauges one may configure warning levels - in such a case the particular gauge becomes red (on supported devices, i.e. 2.7inch BWR).
