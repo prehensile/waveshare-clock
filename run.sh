@@ -33,12 +33,17 @@ export DARKSKY_KEY=GET_YOUR_OWN_KEY         # get the key from: https://darksky.
 export AIRLY_KEY=GET_YOUR_OWN_KEY           # get the key from: https://developer.airly.eu/register
 
 # Cache TTLs in minutes for each data fetcher (refer to free accounts limitations before you change the values any lower than 10m)
-#export GOOGLE_MAPS_TTL=10
-#export DARKSKY_TTL=15
-#export AIRLY_TTL=20
+export GOOGLE_MAPS_TTL=10
+export DARKSKY_TTL=15
+export AIRLY_TTL=20
 
+# Units
+export GOOGLE_MAPS_UNITS=metric             # refer to: https://developers.google.com/maps/documentation/distance-matrix/intro#unit_systems for allowed values (metric, imperial)
+export DARK_SKY_UNITS=si                    # refer to: https://darksky.net/dev/docs for allowed values (si, us, auto, etc)
 
+# Warning levels
 export AQI_WARN_LEVEL=75                    # above this value the displayed gauge will become red (on supported displays)
+export WEATHER_STORM_DISTANCE_WARN=10       # display warning if storm is closer than this value in km/miles (take a look at units above)
 
 # Lat & lon of destination you want to calculate the current driving time including traffic
 export FIRST_TIME_TO_DESTINATION_LAT=49.9684476

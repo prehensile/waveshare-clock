@@ -17,26 +17,26 @@ CANVAS_HEIGHT = 300
 CELSIUS_SYMBOL = u'°'
 
 
-def draw_text(x, y, text, font_size, draw):
+def draw_text(x, y, text, font_size, draw, color=0):
     font = ImageFont.truetype('./font/default', font_size)
-    draw.text((x, y), unicode(text, "utf-8"), font=font, fill=0)
+    draw.text((x, y), unicode(text, "utf-8"), font=font, fill=color)
     return y + font_size * 1.2  # +20%
 
 
-def draw_multiline_text(x, y, text, font_size, draw):
+def draw_multiline_text(x, y, text, font_size, draw, color=0):
     height = 0
     font = ImageFont.truetype('./font/default', font_size)
     text_width = font.getsize(text)
-    if text_width[0] * 1.05 > CANVAS_WIDTH:
-        break_at = len(text) * CANVAS_WIDTH / text_width[0]  # rough estimation (proportion: text width to screen size vs unknown to string len)
+    if text_width[0] * 1.05 > CANVAS_WIDTH - x:
+        break_at = len(text) * (CANVAS_WIDTH - x) / text_width[0]  # rough estimation (proportion: text width to screen size minus start pos vs unknown to string len)
         lines = textwrap.wrap(text, width=break_at)
         line_counter = 0
         for line in lines:
-            draw.text((x, y + line_counter * font_size * 1.1), unicode(line, "utf-8"), font=font, fill=0)
+            draw.text((x, y + line_counter * font_size * 1.1), unicode(line, "utf-8"), font=font, fill=color)
             line_counter += 1
             height += font_size * 1.2
     else:
-        draw.text((x, y), unicode(text, "utf-8"), font=font, fill=0)
+        draw.text((x, y), unicode(text, "utf-8"), font=font, fill=color)
         height += font_size * 1.2
       
     return y + height
@@ -66,18 +66,20 @@ def draw_weather_icon(buf, fn_icon, pos):
     buf.paste(img_icon, pos)
 
 
-def draw_weather(buf, weather):
+def draw_weather(buf, red_buf, weather):
     back = Image.open('images/back.bmp')
     buf.paste(back, (0, 200))
 
-    icon = icons.darksky[ weather.icon ]
-    draw_weather_icon(
-        buf,
-        icon,
-        [15,215]
-    )
+    icon = icons.darksky.get(weather.icon, None)
+    if icon is not None:
+        draw_weather_icon(
+            buf,
+            icon,
+            [15,215]
+        )
 
     draw = ImageDraw.Draw(buf)
+    red_draw = ImageDraw.Draw(red_buf)
 
     caption = "%0.0f" % weather.temp
     top_y = 194
@@ -85,12 +87,19 @@ def draw_weather(buf, weather):
     draw_temp(150, top_y, caption, 100, 60, 6, draw)
 
     mid_y = top_y + 17
+    storm_distance_warning = int(os.environ.get("WEATHER_STORM_DISTANCE_WARN", "10"))
 
-    caption = "%0.0f" % weather.temp_min
-    draw_small_temp(250, mid_y, caption, draw)
-
-    caption = "%0.0f" % weather.temp_max
-    draw_small_temp(350, mid_y, caption, draw)
+    if weather.alert_title is not None:
+        caption = "Alert: {}".format(weather.alert_title.encode('utf-8'))
+        draw_multiline_text(250, mid_y, caption, 25, red_draw)
+    elif weather.nearest_storm_distance is not None and weather.nearest_storm_distance <= storm_distance_warning:
+        caption = "Storm @ {}{}".format(weather.nearest_storm_distance, "km" if os.environ.get("DARK_SKY_UNITS", "si") else "mi")
+        draw_multiline_text(250, mid_y, caption, 40, red_draw)
+    else:
+        caption = "%0.0f" % weather.temp_min
+        draw_small_temp(250, mid_y, caption, draw)
+        caption = "%0.0f" % weather.temp_max
+        draw_small_temp(350, mid_y, caption, draw)
 
 
 def draw_clock(img_buf, formatted_time):
@@ -143,7 +152,7 @@ def draw_airly(black_buf, red_buf, airly):
 
     draw = ImageDraw.Draw(buf)
 
-    caption = "%i" % int(round(airly.aqi))
+    caption = "%3i" % int(round(airly.aqi))
     draw_text_aqi(25, 100, caption, 90, draw)
 
 
@@ -157,7 +166,7 @@ def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):
 
     draw = ImageDraw.Draw(buf)
 
-    caption = "%i" % int(round(secs_in_traffic / 60))
+    caption = "%2i" % int(round(secs_in_traffic / 60))
 
     draw_text_eta(50  + ((idx + 1) * CANVAS_WIDTH) / 3 , 100, caption, 70, draw)
 
@@ -210,7 +219,13 @@ def draw_weather_details(weather):
     draw_text(10, 90, "Temperature: {}{}".format(weather.temp, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
     draw_text(10, 120, "Daily min: {}{}, max: {}{}".format(weather.temp_min, CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
     y = draw_multiline_text(10, 180, "Daily summary: {}".format(weather.summary.encode('utf-8')), 25, draw)
-    draw_multiline_text(10, y, "Forecast: {}".format(weather.forecast_summary.encode('utf-8')), 25, draw)
+    
+    caption = None
+    if weather.alert_description is not None:
+        caption = "Alert: {}".format(weather.alert_description.encode('utf-8'))
+    else:
+        caption = "Forecast: {}".format(weather.forecast_summary.encode('utf-8'))
+    draw_multiline_text(10, y, caption, 25, draw)
 
     return black_buf, red_buf
 
@@ -245,6 +260,6 @@ def draw_frame(is_mono, formatted_time, weather, airly, gmaps1, gmaps2):
     draw_airly(black_buf, red_buf, airly)
 
     # draw weather into buffer
-    draw_weather(black_buf, weather)
+    draw_weather(black_buf, red_buf, weather)
 
     return black_buf, red_buf

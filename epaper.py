@@ -49,6 +49,7 @@ class EPaper(object):
         os.environ.get("DARKSKY_KEY"),
         os.environ.get("LAT"),
         os.environ.get("LON"),
+        os.environ.get("DARKSKY_UNITS", "si"),
         int(os.environ.get("DARKSKY_TTL", "15"))
     )
     gmaps1 = GMaps(
@@ -57,7 +58,8 @@ class EPaper(object):
         os.environ.get("LON"),
         os.environ.get("FIRST_TIME_TO_DESTINATION_LAT"),
         os.environ.get("FIRST_TIME_TO_DESTINATION_LON"),
-        "first",
+        os.environ.get("GOOGLE_MAPS_UNITS", "metric"),
+        "primary",
         int(os.environ.get("GOOGLE_MAPS_TTL", "10"))
     )
     gmaps2 = GMaps(
@@ -66,7 +68,8 @@ class EPaper(object):
         os.environ.get("LON"),
         os.environ.get("SECOND_TIME_TO_DESTINATION_LAT"),
         os.environ.get("SECOND_TIME_TO_DESTINATION_LON"),
-        "second",
+        os.environ.get("GOOGLE_MAPS_UNITS", "metric"),
+        "secondary",
         int(os.environ.get("GOOGLE_MAPS_TTL", "10"))
     )
 

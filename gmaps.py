@@ -14,12 +14,13 @@ GMapsTuple = namedtuple('Gmaps', ['time_to_dest', 'time_to_dest_in_traffic', 'di
 class GMaps(Acquire):
     
 
-    def __init__(self, key, home_lat, home_lon, dest_lat, dest_lon, name, cache_ttl):
+    def __init__(self, key, home_lat, home_lon, dest_lat, dest_lon, units, name, cache_ttl):
         self.key = key
         self.home_lat = home_lat
         self.home_lon = home_lon
         self.dest_lat = dest_lat
         self.dest_lon = dest_lon
+        self.units = units
         self.name = name
         self.cache_ttl = cache_ttl
 
@@ -54,7 +55,8 @@ class GMaps(Acquire):
 
         try:
             r = requests.get(
-                "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&departure_time=now&origins={},{}&destinations={},{}&key={}".format(
+                "https://maps.googleapis.com/maps/api/distancematrix/json?units={}&departure_time=now&origins={},{}&destinations={},{}&key={}".format(
+                    self.units,
                     self.home_lat,
                     self.home_lon,
                     self.dest_lat,

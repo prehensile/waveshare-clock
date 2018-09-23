@@ -8,16 +8,17 @@ import requests
 from collections import namedtuple
 
 
-WeatherTuple = namedtuple('Weather', ['temp', 'temp_min', 'temp_max', 'icon', 'summary', 'forecast_summary'])
+WeatherTuple = namedtuple('Weather', ['temp', 'temp_min', 'temp_max', 'icon', 'summary', 'forecast_summary', 'nearest_storm_distance', 'alert_title', 'alert_description'])
 
 
 class Weather(Acquire):
 
 
-    def __init__(self, key, lat, lon, cache_ttl):
+    def __init__(self, key, lat, lon, units, cache_ttl):
         self.key = key
         self.lat = lat
         self.lon = lon
+        self.units = units
         self.cache_ttl = cache_ttl
 
 
@@ -40,8 +41,8 @@ class Weather(Acquire):
                     self.lon
                 ),
                 params = {
-                    "units" : "si",
-                    "exclude" : "minutely,hourly,alerts,flags"
+                    "units" : self.units,
+                    "exclude" : "minutely,hourly,flags"
                 }
             )
             return r
@@ -55,7 +56,8 @@ class Weather(Acquire):
     def get(self):
         forecast_data = self.load()
         if forecast_data is None:
-            return WeatherTuple(temp=-99, temp_min=-99, temp_max=-99, icon='n/a', summary='n/a', forecast_summary='n/a')
+            return WeatherTuple(temp=-99, temp_min=-99, temp_max=-99, icon='n/a', summary='n/a',
+                                forecast_summary='n/a', nearest_storm_distance=None, alert_title=None, alert_description=None)
         
         d = forecast_data['daily']['data'][0]
 
@@ -63,6 +65,7 @@ class Weather(Acquire):
         temp_max = d['temperatureMax']
 
         c = forecast_data['currently']
+        a = forecast_data.get('alerts', None)
 
         return WeatherTuple(
             temp=c['temperature'],
@@ -70,5 +73,8 @@ class Weather(Acquire):
             temp_max=temp_max,
             icon=d['icon'],
             summary=c['summary'],
-            forecast_summary=forecast_data['daily']['summary']
+            forecast_summary=forecast_data['daily']['summary'],
+            nearest_storm_distance=c.get('nearestStormDistance', None),
+            alert_title=a['title'] if a is not None else None,
+            alert_description=a['description'] if a is not None else None,
         )
