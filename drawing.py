@@ -3,7 +3,6 @@
 # Original code: https://github.com/prehensile/waveshare-clock
 # Modifications: https://github.com/pskowronek/epaper-clock-and-more, Apache 2 license
 
-import os 
 from PIL import Image, ImageDraw, ImageFont
 import icons
 import textwrap
@@ -16,12 +15,16 @@ class Drawing(object):
     CANVAS_WIDTH = 400
     CANVAS_HEIGHT = 300
 
-    # Celcius symbol
-    CELSIUS_SYMBOL = u'°'
+    # Temperature symbol
+    TEMPERATURE_SYMBOL = u'°'
 
 
-    def __init__(self):
-        pass
+    def __init__(self, storm_distance_warn, darksky_units, aqi_warn_level, primary_time_warn_above, secondary_time_warn_above):
+        self.distance_symbol = 'km' if darksky_units == 'si' else 'mi'
+        self.storm_distance_warn = storm_distance_warn
+        self.aqi_warn_level = aqi_warn_level
+        self.primary_time_warn_above = primary_time_warn_above
+        self.secondary_time_warn_above = secondary_time_warn_above
 
 
     def load_font(self, font_size):
@@ -54,11 +57,7 @@ class Drawing(object):
 
 
     def draw_weather_icon(self, buf, fn_icon, pos):
-        fn_icon = os.path.join(
-            "./icons",
-            fn_icon
-        )
-        img_icon = Image.open(fn_icon)
+        img_icon = Image.open("./icons/" + fn_icon)
         buf.paste(img_icon, pos)
 
 
@@ -79,10 +78,10 @@ class Drawing(object):
 
         top_y = 194
 
-        caption = "{:0.0f}{}".format(weather.temp, self.CELSIUS_SYMBOL.encode('utf-8'))
+        caption = "{:0.0f}{}".format(weather.temp, self.TEMPERATURE_SYMBOL.encode('utf-8'))
         self.draw_text(85, top_y, caption, 90, draw, 255)
 
-        storm_distance_warning = int(os.environ.get("WEATHER_STORM_DISTANCE_WARN", "10"))
+        storm_distance_warning = self.storm_distance_warn
 
         if weather.alert_title is not None:
             top_y = top_y + 3
@@ -92,14 +91,14 @@ class Drawing(object):
             self.draw_multiline_text(220, top_y, caption, 23, red_draw, 255)
         elif weather.nearest_storm_distance is not None and weather.nearest_storm_distance <= storm_distance_warning:
             top_y = top_y + 3
-            caption = "Storm @ {}{}".format(weather.nearest_storm_distance, "km" if os.environ.get("DARK_SKY_UNITS", "si") else "mi")
+            caption = "Storm @ {}{}".format(weather.nearest_storm_distance, self.distance_symbol)
             draw.rectangle((215, top_y + 5, self.CANVAS_WIDTH - 10, top_y + 95), 255, 255)
             red_draw.rectangle((215, top_y + 5, self.CANVAS_WIDTH - 10, top_y + 95), 0, 0)
             top_y = top_y + 7
             self.draw_multiline_text(230, top_y, caption, 40, red_draw, 255)
         else:
             mid_y = top_y + 17
-            caption = "{:0.0f}{} {:0.0f}{}".format(weather.temp_min, self.CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, self.CELSIUS_SYMBOL.encode('utf-8'))
+            caption = "{:0.0f}{} {:0.0f}{}".format(weather.temp_min, self.TEMPERATURE_SYMBOL.encode('utf-8'), weather.temp_max, self.TEMPERATURE_SYMBOL.encode('utf-8'))
             self.draw_text(205, mid_y, caption, 60, draw, 255)
 
 
@@ -145,7 +144,7 @@ class Drawing(object):
 
 
     def draw_airly(self, black_buf, red_buf, airly):
-        buf = black_buf if airly.aqi < int(os.environ.get("AQI_WARN_LEVEL", "75")) else red_buf
+        buf = black_buf if airly.aqi < self.aqi_warn_level else red_buf
 
         back = Image.open('images/back_aqi.bmp')
         buf.paste(back, (0, 100))
@@ -216,8 +215,8 @@ class Drawing(object):
         draw = ImageDraw.Draw(black_buf)
         self.draw_text(10, 10, "Weather by DarkSky.net", 35, draw)
 
-        self.draw_text(10, 65, "Temperature: {}{}".format(weather.temp, self.CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
-        self.draw_text(10, 95, "Daily min: {}{}, max: {}{}".format(weather.temp_min, self.CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, self.CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
+        self.draw_text(10, 65, "Temperature: {}{}".format(weather.temp, self.TEMPERATURE_SYMBOL.encode('utf-8')), 30, draw)
+        self.draw_text(10, 95, "Daily min: {}{}, max: {}{}".format(weather.temp_min, self.TEMPERATURE_SYMBOL.encode('utf-8'), weather.temp_max, self.TEMPERATURE_SYMBOL.encode('utf-8')), 30, draw)
         y = self.draw_multiline_text(10, 145, "Daily summary: {}".format(weather.summary.encode('utf-8')), 25, draw)
     
         caption = None
@@ -251,10 +250,10 @@ class Drawing(object):
         self.draw_clock(black_buf, formatted_time)
 
         # draw time to dest into buffer
-        self.draw_eta(0, black_buf, red_buf, gmaps1, int(os.environ.get("FIRST_TIME_WARN_ABOVE_PERCENT", "50")))
+        self.draw_eta(0, black_buf, red_buf, gmaps1, self.primary_time_warn_above)
 
         # draw time to dest into buffer
-        self.draw_eta(1, black_buf, red_buf, gmaps2, int(os.environ.get("SECOND_TIME_WARN_ABOVE_PERCENT", "50")))
+        self.draw_eta(1, black_buf, red_buf, gmaps2, self.secondary_time_warn_above)
 
         # draw AQI into buffer
         self.draw_airly(black_buf, red_buf, airly)

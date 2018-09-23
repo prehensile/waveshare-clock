@@ -39,7 +39,13 @@ class EPaper(object):
     FAST_REFRESH = os.environ.get("EPAPER_FAST_REFRESH", "false") == "true"
 
 
-    drawing = Drawing()
+    drawing = Drawing(
+        os.environ.get("DARK_SKY_UNITS", "si"),
+        int(os.environ.get("WEATHER_STORM_DISTANCE_WARN", "10")),
+        int(os.environ.get("AQI_WARN_LEVEL", "75")),
+        int(os.environ.get("FIRST_TIME_WARN_ABOVE_PERCENT", "50")),
+        int(os.environ.get("SECONDARY_TIME_WARN_ABOVE_PERCENT", "50"))
+    )
 
     airly = Airly(
         os.environ.get("AIRLY_KEY"),
