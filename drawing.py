@@ -74,15 +74,18 @@ def draw_weather(buf, red_buf, weather):
     storm_distance_warning = int(os.environ.get("WEATHER_STORM_DISTANCE_WARN", "10"))
 
     if weather.alert_title is not None:
-        mid_y = top_y + 3
+        top_y = top_y + 3
         caption = "[!] {}".format(weather.alert_title.lower().encode('utf-8'))
-        draw_multiline_text(220, mid_y, caption, 23, draw, 255)
-        draw_multiline_text(220, mid_y, caption, 23, red_draw)
+        draw.rectangle((215, top_y + 5, CANVAS_WIDTH - 10, top_y + 95), 255, 255)
+        red_draw.rectangle((215, top_y + 5, CANVAS_WIDTH - 10, top_y + 95), 0, 0)
+        draw_multiline_text(220, top_y, caption, 23, red_draw, 255)
     elif weather.nearest_storm_distance is not None and weather.nearest_storm_distance <= storm_distance_warning:
-        mid_y = top_y + 10
+        top_y = top_y + 3
         caption = "Storm @ {}{}".format(weather.nearest_storm_distance, "km" if os.environ.get("DARK_SKY_UNITS", "si") else "mi")
-        draw_multiline_text(230, mid_y, caption, 40, draw, 255)
-        draw_multiline_text(230, mid_y, caption, 40, red_draw)
+        draw.rectangle((215, top_y + 5, CANVAS_WIDTH - 10, top_y + 95), 255, 255)
+        red_draw.rectangle((215, top_y + 5, CANVAS_WIDTH - 10, top_y + 95), 0, 0)
+        top_y = top_y + 7
+        draw_multiline_text(230, top_y, caption, 40, red_draw, 255)
     else:
         mid_y = top_y + 17
         caption = "{:0.0f}{} {:0.0f}{}".format(weather.temp_min, CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, CELSIUS_SYMBOL.encode('utf-8'))
