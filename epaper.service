@@ -1,6 +1,8 @@
 [Unit]
 Description=epaper-clock-and-more
 After=network.target
+# Hopefully it should be enforced soon: https://github.com/systemd/systemd/issues/5097
+Wants=time-sync.target
 
 [Service]
 ExecStart=/home/pi/epaper-clock-and-more/run.sh
