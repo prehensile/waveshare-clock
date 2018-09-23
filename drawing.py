@@ -42,21 +42,6 @@ def draw_multiline_text(x, y, text, font_size, draw, color=0):
     return y + height
 
 
-def draw_temp(center_x, y, temp, temp_size, deg_size, deg_offset, draw):
-    font = ImageFont.truetype('./font/default', temp_size)
-    text_width = font.getsize(temp)
-    draw.text((center_x - (text_width[0] / 2), y), unicode(temp, "utf-8"), font=font, fill=255)
-
-    point_width = font.getsize(CELSIUS_SYMBOL)
-
-    font = ImageFont.truetype('./font/default', deg_size)
-    draw.text((center_x + (text_width[0] / 2) - point_width[0] / 2 + 12, y + deg_offset), CELSIUS_SYMBOL, font=font, fill=255)
-
-
-def draw_small_temp(center_x, y, caption, draw):
-    draw_temp(center_x, y, caption, 60, 40, 7, draw)
-
-
 def draw_weather_icon(buf, fn_icon, pos):
     fn_icon = os.path.join(
         "./icons",
@@ -81,25 +66,27 @@ def draw_weather(buf, red_buf, weather):
     draw = ImageDraw.Draw(buf)
     red_draw = ImageDraw.Draw(red_buf)
 
-    caption = "%0.0f" % weather.temp
     top_y = 194
 
-    draw_temp(150, top_y, caption, 100, 60, 6, draw)
+    caption = "{:0.0f}{}".format(weather.temp, CELSIUS_SYMBOL.encode('utf-8'))
+    draw_text(85, top_y, caption, 90, draw, 255)
 
-    mid_y = top_y + 17
     storm_distance_warning = int(os.environ.get("WEATHER_STORM_DISTANCE_WARN", "10"))
 
     if weather.alert_title is not None:
-        caption = "Alert: {}".format(weather.alert_title.encode('utf-8'))
-        draw_multiline_text(250, mid_y, caption, 25, red_draw)
+        mid_y = top_y + 3
+        caption = "[!] {}".format(weather.alert_title.lower().encode('utf-8'))
+        draw_multiline_text(220, mid_y, caption, 23, draw, 255)
+        draw_multiline_text(220, mid_y, caption, 23, red_draw)
     elif weather.nearest_storm_distance is not None and weather.nearest_storm_distance <= storm_distance_warning:
+        mid_y = top_y + 10
         caption = "Storm @ {}{}".format(weather.nearest_storm_distance, "km" if os.environ.get("DARK_SKY_UNITS", "si") else "mi")
-        draw_multiline_text(250, mid_y, caption, 40, red_draw)
+        draw_multiline_text(230, mid_y, caption, 40, draw, 255)
+        draw_multiline_text(230, mid_y, caption, 40, red_draw)
     else:
-        caption = "%0.0f" % weather.temp_min
-        draw_small_temp(250, mid_y, caption, draw)
-        caption = "%0.0f" % weather.temp_max
-        draw_small_temp(350, mid_y, caption, draw)
+        mid_y = top_y + 17
+        caption = "{:0.0f}{} {:0.0f}{}".format(weather.temp_min, CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, CELSIUS_SYMBOL.encode('utf-8'))
+        draw_text(205, mid_y, caption, 60, draw, 255)
 
 
 def draw_clock(img_buf, formatted_time):
@@ -153,7 +140,7 @@ def draw_airly(black_buf, red_buf, airly):
     draw = ImageDraw.Draw(buf)
 
     caption = "%3i" % int(round(airly.aqi))
-    draw_text_aqi(25, 100, caption, 90, draw)
+    draw_text_aqi(25, 95, caption, 90, draw)
 
 
 def draw_eta(idx, black_buf, red_buf, gmaps, warn_above_percent):

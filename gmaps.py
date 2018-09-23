@@ -12,7 +12,10 @@ GMapsTuple = namedtuple('Gmaps', ['time_to_dest', 'time_to_dest_in_traffic', 'di
 
 
 class GMaps(Acquire):
-    
+
+
+    DEFAULT = GMapsTuple(time_to_dest=-1, time_to_dest_in_traffic=-1, distance=-1, origin_address='n/a', destination_address='n/a')    
+
 
     def __init__(self, key, home_lat, home_lon, dest_lat, dest_lon, units, name, cache_ttl):
         self.key = key
@@ -72,15 +75,20 @@ class GMaps(Acquire):
 
 
     def get(self):
-        gmaps_data = self.load()
-        if gmaps_data is None:
-            return GMapsTuple(time_to_dest=-1, time_to_dest_in_traffic=-1, distance=-1, origin_address='n/a', destination_address='n/a')
+        try:
+            gmaps_data = self.load()
+            if gmaps_data is None:
+                return self.DEFAULT
 
-        return GMapsTuple(
-            time_to_dest=gmaps_data['rows'][0]['elements'][0]['duration']['value'],  # in seconds
-            time_to_dest_in_traffic=gmaps_data['rows'][0]['elements'][0]['duration_in_traffic']['value'],  # in seconds
-            distance=gmaps_data['rows'][0]['elements'][0]['distance']['text'],  # in km, string with km
-            origin_address=gmaps_data['origin_addresses'][0],
-            destination_address=gmaps_data['destination_addresses'][0]
-        )
+            return GMapsTuple(
+                time_to_dest=gmaps_data['rows'][0]['elements'][0]['duration']['value'],  # in seconds
+                time_to_dest_in_traffic=gmaps_data['rows'][0]['elements'][0]['duration_in_traffic']['value'],  # in seconds
+                distance=gmaps_data['rows'][0]['elements'][0]['distance']['text'],  # in km, string with km
+                origin_address=gmaps_data['origin_addresses'][0],
+                destination_address=gmaps_data['destination_addresses'][0]
+            )
+        except Exception as e:
+            logging.exception(e)
+            return self.DEFAULT
+
 
