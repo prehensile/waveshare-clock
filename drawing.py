@@ -216,9 +216,9 @@ def draw_weather_details(weather):
     draw = ImageDraw.Draw(black_buf)
     draw_text(10, 10, "Weather by DarkSky.net", 35, draw)
 
-    draw_text(10, 90, "Temperature: {}{}".format(weather.temp, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
-    draw_text(10, 120, "Daily min: {}{}, max: {}{}".format(weather.temp_min, CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
-    y = draw_multiline_text(10, 180, "Daily summary: {}".format(weather.summary.encode('utf-8')), 25, draw)
+    draw_text(10, 65, "Temperature: {}{}".format(weather.temp, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
+    draw_text(10, 95, "Daily min: {}{}, max: {}{}".format(weather.temp_min, CELSIUS_SYMBOL.encode('utf-8'), weather.temp_max, CELSIUS_SYMBOL.encode('utf-8')), 30, draw)
+    y = draw_multiline_text(10, 145, "Daily summary: {}".format(weather.summary.encode('utf-8')), 25, draw)
     
     caption = None
     if weather.alert_description is not None:
