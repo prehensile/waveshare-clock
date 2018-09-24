@@ -15,7 +15,8 @@ TimeoutStartSec=20s
 TimeoutStopSec=20s
 StartLimitInterval=5min
 StartLimitBurst=5
-StartLimitAction=reboot
+# Turn it on only when you are absolutely and positively sure that this service works tip-top, otherwise you may experience reboot loop
+#StartLimitAction=reboot
 # Watchdog unleashed. The value must not be lower than 60s + some time to eventually get data
 WatchdogSec=120s
 Type=notify
