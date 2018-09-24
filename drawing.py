@@ -28,7 +28,7 @@ class Drawing(object):
 
 
     def load_font(self, font_size):
-        return ImageFont.truetype('./font/default', font_size)
+        return ImageFont.truetype('./resources/font/default', font_size)
 
 
     def draw_text(self, x, y, text, font_size, draw, color=0):
@@ -57,12 +57,12 @@ class Drawing(object):
 
 
     def draw_weather_icon(self, buf, fn_icon, pos):
-        img_icon = Image.open("./icons/" + fn_icon)
+        img_icon = Image.open("./resources/icons/" + fn_icon)
         buf.paste(img_icon, pos)
 
 
     def draw_weather(self, buf, red_buf, weather):
-        back = Image.open('images/back.bmp')
+        back = Image.open('./resources/images/back.bmp')
         buf.paste(back, (0, 200))
 
         icon = icons.darksky.get(weather.icon, None)
@@ -108,7 +108,7 @@ class Drawing(object):
         for n in formatted_time:
             if n == " ":
                 n = "_SPACE"
-            fn = 'images/%s.bmp' % n
+            fn = './resources/images/%s.bmp' % n
             img_num = Image.open(fn)
             img_num = img_num.resize((img_num.size[0], img_num.size[1] / 2), Image.NEAREST)
 
@@ -146,7 +146,7 @@ class Drawing(object):
     def draw_airly(self, black_buf, red_buf, airly):
         buf = black_buf if airly.aqi < self.aqi_warn_level else red_buf
 
-        back = Image.open('images/back_aqi.bmp')
+        back = Image.open('./resources/images/back_aqi.bmp')
         buf.paste(back, (0, 100))
 
         draw = ImageDraw.Draw(buf)
@@ -160,7 +160,7 @@ class Drawing(object):
         secs = 1.0 * gmaps.time_to_dest
         buf = black_buf if secs < 0 or secs * (100.0 + warn_above_percent) / 100.0 > secs_in_traffic else red_buf
 
-        back = Image.open("images/back_eta_{}.bmp".format(idx))
+        back = Image.open("./resources/images/back_eta_{}.bmp".format(idx))
         buf.paste(back, (((idx + 1) * self.CANVAS_WIDTH) / 3 , 100))
 
         draw = ImageDraw.Draw(buf)
@@ -173,7 +173,7 @@ class Drawing(object):
     def draw_shutdown(self, is_mono):
         black_buf = Image.new('1', (self.CANVAS_WIDTH, self.CANVAS_HEIGHT), 1)
         red_buf = black_buf if (is_mono) else Image.new('1', (self.CANVAS_WIDTH, self.CANVAS_HEIGHT), 1)
-        shutdown_icon = Image.open("images/shutdown.bmp")
+        shutdown_icon = Image.open("./resources/images/shutdown.bmp")
         red_buf.paste(shutdown_icon, (0, 0))
         return black_buf, red_buf
 

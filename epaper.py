@@ -89,13 +89,13 @@ class EPaper(object):
             if self.DEVICE_TYPE == 'waveshare-2.7':
                 if self.FAST_REFRESH:
                     logging.info("Using experimental LUT tables!")
-                    import epd2in7b_fast_lut
+                    from epds import epd2in7b_fast_lut
                     self._epd = epd2in7b_fast_lut.EPD()
                 else:
-                    import epd2in7b
+                    from epds import epd2in7b
                     self._epd = epd2in7b.EPD()
             elif self.DEVICE_TYPE == 'waveshare-4.2':
-                import epd4in2
+                from epds import epd4in2
                 self._epd = epd4in2.EPD()
 
             self._epd.init()

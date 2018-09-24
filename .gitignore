@@ -21,6 +21,10 @@ local.properties
 *.iws
 /out/
 
+# PyCharm
+venv/
+
+
 # User-specific configurations
 .idea/libraries/
 .idea/.name

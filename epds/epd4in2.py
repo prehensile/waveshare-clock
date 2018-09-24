@@ -25,7 +25,6 @@
  #
 
 import epdif
-import Image
 import RPi.GPIO as GPIO
 
 # Display resolution
