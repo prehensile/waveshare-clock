@@ -229,13 +229,16 @@ class Drawing(object):
         return black_buf, red_buf
 
 
-    def draw_system_details(self):
+    def draw_system_details(self, sys_info):
         black_buf = Image.new('1', (self.CANVAS_WIDTH, self.CANVAS_HEIGHT), 1)
         red_buf = Image.new('1', (self.CANVAS_WIDTH, self.CANVAS_HEIGHT), 1)
         draw = ImageDraw.Draw(black_buf)
         self.draw_text(10, 10, "System info", 35, draw)
 
-        # TBD
+        self.draw_text(10, 80, "Uptime: {}".format(sys_info.uptime), 30, draw)
+        self.draw_text(10, 120, "CPU usage: {}".format(sys_info.cpu_usage), 30, draw)
+        self.draw_text(10, 160, "Mem usage: {}".format(sys_info.mem_usage), 30, draw)
+        self.draw_text(10, 200, "Disk free: {}".format(sys_info.free_disk), 30, draw)
 
         return black_buf, red_buf
 

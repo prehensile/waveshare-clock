@@ -89,7 +89,6 @@ To enable this feature set the following environment variable: ```export EPAPER_
 ## TODOs
 
 - rework drawing.py (~~make it a class~~ and gagues rendered w/o knowledge about their final placement)
-- implement system info (executed by 4th button)
 
 ## License
 

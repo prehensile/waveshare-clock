@@ -10,6 +10,7 @@ from drawing import Drawing
 from airly import Airly
 from weather import Weather
 from gmaps import GMaps
+from system_info import SystemInfo
 
 
 class EPaper(object):
@@ -80,6 +81,7 @@ class EPaper(object):
         "secondary",
         int(os.environ.get("GOOGLE_MAPS_TTL", "10"))
     )
+    system_info = SystemInfo()
 
 
     def __init__(self, debug_mode = False):
@@ -157,7 +159,7 @@ class EPaper(object):
 
 
     def display_system_details(self):
-        black_frame, red_frame = self.drawing.draw_system_details()
+        black_frame, red_frame = self.drawing.draw_system_details(self.system_info.get())
         self.display_buffer(black_frame, red_frame, 'system')
 
 

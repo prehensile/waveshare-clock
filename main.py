@@ -100,14 +100,14 @@ def main():
             logging.info("Going to refresh the main screen...")
             refresh_main_screen(epaper)
 
-        for i in range(120):
+        for i in range(120 if buttons is not None else 1):  # lower the CPU usage when no buttons handled
             if shutting_down:
                 logging.info("App is shutting down...")
                 break
             if details_to_display is not None:
                 logging.info("Got button pressed!")
                 break
-            time.sleep(0.5)
+            time.sleep(0.5 if buttons is not None else 60)
 
 
 def action_button(key, epaper):
@@ -131,6 +131,7 @@ def refresh_main_screen(epaper, force = False):
         epaper.display_weather_details()
         epaper.display_airly_details()
         epaper.display_gmaps_details()
+        epaper.display_system_details()
 
 
 def signal_hook(*args):
