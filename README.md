@@ -88,11 +88,8 @@ To enable this feature set the following environment variable: ```export EPAPER_
 
 ## TODOs
 
-- better support for a button key press (to avoid multiple action execution if you press a button too long)
-- rework drawing.py (make it a class and gagues rendered w/o knowledge about their final placement)
+- rework drawing.py (~~make it a class~~ and gagues rendered w/o knowledge about their final placement)
 - implement system info (executed by 4th button)
-- better time/delay handling to refresh every 60s (use scheduler)
-- detailed info executed by a key press should be kept on screen for some amount of time (now the clock update closes/repaints the info)
 
 ## License
 

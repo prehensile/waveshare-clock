@@ -45,41 +45,78 @@ from epaper import EPaper
 
 DEBUG_MODE = os.environ.get("EPAPER_DEBUG_MODE", "false") == "true"
 shutting_down = False
+after_details = False
 epaper = None
 
 
 def main():
     global epaper
     global shutting_down
+    global after_details
+
     epaper = EPaper(debug_mode=DEBUG_MODE)
 
     atexit.register(shutdown_hook)
     signal.signal(signal.SIGTERM, signal_hook)
-    
+
+    buttons = None
     if not DEBUG_MODE and (os.environ.get("EPAPER_BUTTONS_ENABLED", "true") == "true"):
         from buttons import Buttons
-        Buttons(
-            epaper,
+        buttons = Buttons(
             int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY1", "5")),
+            lambda: epaper.display_gmaps_details(),
             int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY2", "6")),
+            lambda: epaper.display_airly_details(),
             int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY3", "13")),
-            int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY4", "19"))
+            lambda: epaper.display_weather_details(),
+            int(os.environ.get("EPAPER_GPIO_PIN_FOR_KEY4", "19")),
+            lambda: epaper.display_system_details(),
+            lambda: action_after_details()
         )
 
     notifier = sdnotify.SystemdNotifier()
     notifier.notify("READY=1")
 
     while True:
-        if shutting_down:
-            break
         notifier.notify("WATCHDOG=1")
-        utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in epaper itself (probably using acquire.py w/o caching)
-        epaper.display_main_screen(utc_dt.astimezone(get_localzone()))
-        if DEBUG_MODE:
-            epaper.display_weather_details()
-            epaper.display_airly_details()
-            epaper.display_gmaps_details()
-        time.sleep(60)  # TODO use scheduler
+        logging.info("Going to refresh the main screen...")
+
+        if shutting_down:
+            logging.info("... or not - app is shutting down.")
+            break
+        if buttons is None or not buttons.busy():
+            if buttons:
+                buttons.set_busy()
+            refresh_main_screen(epaper)
+            if buttons:
+                buttons.set_not_busy()
+        else:
+            logging.info("Ignoring main screen refresh due to button's orignating action")
+
+        for i in range(30):
+            if after_details:
+                logging.info("State after button press - wait a while before refreshing the main window (to keep the info on display)...")
+                time.sleep(5)
+                after_details = False
+                buttons.set_not_busy()
+                break
+            time.sleep(2)
+
+
+def refresh_main_screen(epaper):
+    utc_dt = datetime.now(timezone('UTC'))  # time readings should be done in epaper itself (probably using acquire.py w/o caching)
+    epaper.display_main_screen(utc_dt.astimezone(get_localzone()))
+    if DEBUG_MODE:
+        epaper.display_weather_details()
+        epaper.display_airly_details()
+        epaper.display_gmaps_details()
+
+
+def action_after_details():
+    global after_details
+
+    logging.info("Informing main thread that button action has just finished")
+    after_details = True
 
 
 def signal_hook(*args):

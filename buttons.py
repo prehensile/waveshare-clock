@@ -6,46 +6,43 @@ import RPi.GPIO as GPIO
 
 class Buttons(object):
 
-
-    def __init__(self, epaper, key1, key2, key3, key4):
-        self.epaper = epaper
-        self.key1 = key1
-        self.key2 = key2
-        self.key3 = key3
-        self.key4 = key4
-        self.register()
+    action_in_progress = False
 
 
-    def register(self):
+    def __init__(self, key1, key1_action, key2, key2_action, key3, key3_action, key4, key4_action, close_action):
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.key1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.key2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.key3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.key4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(key1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(key2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(key3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(key4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-        GPIO.add_event_detect(self.key1, GPIO.FALLING, callback=self.button1_pressed, bouncetime=200)
-        GPIO.add_event_detect(self.key2, GPIO.FALLING, callback=self.button2_pressed, bouncetime=200)
-        GPIO.add_event_detect(self.key3, GPIO.FALLING, callback=self.button3_pressed, bouncetime=200)
-        GPIO.add_event_detect(self.key4, GPIO.FALLING, callback=self.button4_pressed, bouncetime=200)
-
-    
-    def button1_pressed(self, pin):
-        logging.info("Button #1 pressed")
-        self.epaper.display_gmaps_details()
-                   
-
-    def button2_pressed(self, pin):
-        logging.info("Button #2 pressed")
-        self.epaper.display_airly_details()
+        GPIO.add_event_detect(key1, GPIO.FALLING, callback=lambda pin: self.button_pressed(1, key1_action, close_action), bouncetime=200)
+        GPIO.add_event_detect(key2, GPIO.FALLING, callback=lambda pin: self.button_pressed(2, key2_action, close_action), bouncetime=200)
+        GPIO.add_event_detect(key3, GPIO.FALLING, callback=lambda pin: self.button_pressed(3, key3_action, close_action), bouncetime=200)
+        GPIO.add_event_detect(key4, GPIO.FALLING, callback=lambda pin: self.button_pressed(4, key4.action, close_action), bouncetime=200)
 
 
-    def button3_pressed(self, pin):
-        logging.info("Button #3 pressed")
-        self.epaper.display_weather_details()
+    def set_busy(self):
+        self.action_in_progress = True
 
 
-    def button4_pressed(self, pin):
-        logging.info("Button #4 pressed")
-        self.epaper.display_system_details()
+    def set_not_busy(self):
+        self.action_in_progress = False
 
+
+    def busy(self):
+        return self.action_in_progress
+
+
+    def button_pressed(self, buttonNo, open_action, close_action):
+        if self.busy():
+            logging.info("Button #{} ignored".format(buttonNo))
+            return
+        try:
+            self.set_busy()
+            logging.info("Button #{} pressed".format(buttonNo))
+            open_action()
+        finally:
+            logging.info("Finishing button key press handling")
+            close_action()
 
