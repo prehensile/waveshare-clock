@@ -161,7 +161,7 @@ class EPaper(object):
         self.display_buffer(black_frame, red_frame, 'system')
 
 
-    def display_main_screen(self, dt):
+    def display_main_screen(self, dt, force = False):
         time_format = "%H%M"
         formatted = dt.strftime(time_format)
 
@@ -171,7 +171,7 @@ class EPaper(object):
             if int(h) in dead_range:
                 formatted = "{}  ".format(h)
 
-        if formatted != self._str_time:
+        if force or formatted != self._str_time:
 
             weather_data = self.weather.get()
             logging.info("--- weather: " + json.dumps(weather_data))
