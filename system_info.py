@@ -2,7 +2,6 @@
 
 from acquire import Acquire
 
-import os
 import psutil
 from uptime import uptime
 
@@ -33,12 +32,11 @@ class SystemInfo(Acquire):
 
     def get(self):
         try:
-            st = os.statvfs("/")
             return SystemTuple(
-                uptime="{:0.0f} days".format(uptime()/(3600*24)),
+                uptime="{:0.0f} days".format(uptime() / (3600 * 24)),
                 cpu_usage="{} %".format(psutil.cpu_percent()),
                 mem_usage="{} %".format(psutil.virtual_memory().percent),
-                free_disk="{} MB".format(psutil.disk_usage('/').free / (1024*1024))
+                free_disk="{} MB".format(psutil.disk_usage('/').free / (1024 * 1024))
             )
 
         except Exception as e:
