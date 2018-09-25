@@ -63,21 +63,23 @@ class Drawing(object):
 
 
     def draw_weather(self, buf, red_buf, weather):
+        start_pos = (0, 200)
+    
         back = Image.open('./resources/images/back.bmp')
-        buf.paste(back, (0, 200))
+        buf.paste(back, start_pos)
 
         icon = icons.darksky.get(weather.icon, None)
         if icon is not None:
             self.draw_weather_icon(
                 buf,
                 icon,
-                [15,215]
+                [start_pos[0] + 15, start_pos[1] + 15]
             )
 
         draw = ImageDraw.Draw(buf)
         red_draw = ImageDraw.Draw(red_buf)
 
-        top_y = 194
+        top_y = start_pos[1] - 6
 
         caption = "{:0.0f}{}".format(weather.temp, self.TEMPERATURE_SYMBOL.encode('utf-8'))
         self.draw_text(85, top_y, caption, 90, draw, 255)
@@ -98,23 +100,25 @@ class Drawing(object):
             top_y = top_y + 7
             self.draw_multiline_text(230, top_y, caption, 40, red_draw, 255)
         else:
-            mid_y = top_y + 17
+            top_y = top_y + 17
             caption = "{:0.0f}{} {:0.0f}{}".format(weather.temp_min, self.TEMPERATURE_SYMBOL.encode('utf-8'), weather.temp_max, self.TEMPERATURE_SYMBOL.encode('utf-8'))
-            self.draw_text(205, mid_y, caption, 60, draw, 255)
+            self.draw_text(205, top_y, caption, 60, draw, 255)
 
 
     def draw_clock(self, img_buf, formatted_time):
+        start_pos = (0, 0)
         im_width = 100
         offs = 0
         for n in formatted_time:
             if n == " ":
                 n = "_SPACE"
-            fn = './resources/images/%s.bmp' % n
+            fn = 'resources/images/%s.bmp' % n
             img_num = Image.open(fn)
             img_num = img_num.resize((img_num.size[0], img_num.size[1] / 2), Image.NEAREST)
-
-            img_buf.paste(img_num, (offs, 0))
+            img_buf.paste(img_num, (start_pos[0] + offs, start_pos[1]))
             offs += im_width
+        divider = Image.open('resources/images/clock-middle.bmp')
+        img_buf.paste(divider, (self.CANVAS_WIDTH / 2 - 10, start_pos[1] + 10))
 
 
     def draw_text_aqi(self, x, y, text, text_size, draw):    
@@ -145,18 +149,20 @@ class Drawing(object):
 
 
     def draw_airly(self, black_buf, red_buf, airly):
+        start_pos = (0, 100)
         buf = black_buf if airly.aqi < self.aqi_warn_level else red_buf
 
         back = Image.open('./resources/images/back_aqi.bmp')
-        buf.paste(back, (0, 100))
+        buf.paste(back, start_pos)
 
         draw = ImageDraw.Draw(buf)
 
         caption = "%3i" % int(round(airly.aqi))
-        self.draw_text_aqi(25, 95, caption, 90, draw)
+        self.draw_text_aqi(start_pos[0] + 25, start_pos[1] - 5, caption, 90, draw)
 
 
     def draw_eta(self, idx, black_buf, red_buf, gmaps, warn_above_percent):
+        start_pos = (50  + ((idx + 1) * self.CANVAS_WIDTH) / 3, 100)
         secs_in_traffic = 1.0 * gmaps.time_to_dest_in_traffic
         secs = 1.0 * gmaps.time_to_dest
         buf = black_buf if secs < 0 or secs * (100.0 + warn_above_percent) / 100.0 > secs_in_traffic else red_buf
@@ -168,7 +174,7 @@ class Drawing(object):
 
         caption = "%2i" % int(round(secs_in_traffic / 60))
 
-        self.draw_text_eta(50  + ((idx + 1) * self.CANVAS_WIDTH) / 3 , 100, caption, 70, draw)
+        self.draw_text_eta(start_pos[0], start_pos[1], caption, 70, draw)
 
 
     def draw_shutdown(self, is_mono):
