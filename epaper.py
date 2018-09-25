@@ -7,10 +7,10 @@ import os
 from PIL import Image
 
 from drawing import Drawing
-from airly import Airly
-from weather import Weather
-from gmaps import GMaps
-from system_info import SystemInfo
+from providers.airly import Airly
+from providers.weather import Weather
+from providers.gmaps import GMaps
+from providers.system_info import SystemInfo
 
 
 class EPaper(object):

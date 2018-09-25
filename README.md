@@ -42,7 +42,7 @@ More photos of the assembled e-paper 2.7inch display sitting on top of Raspberry
 - install git: ```sudo apt install git```
 - issue the command to fetch this project: ```git clone https://github.com/pskowronek/epaper-clock-and-more.git```
 - go to the project directory: ```cd epaper-clock-and-more``` and install required python modules: ```pip install -r requirements.txt```
-- edit run.sh and configure:
+- rename run-EDIT-ME.sh to run.sh and edit run.sh to configure:
   - your home location (lon & lat)
   - two destinations to check traffic delays
   - a key for traffic information from Google Maps - you can get it [here](https://developers.google.com/maps/documentation/embed/get-api-key) *)

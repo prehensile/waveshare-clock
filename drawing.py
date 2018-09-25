@@ -4,8 +4,9 @@
 # Modifications: https://github.com/pskowronek/epaper-clock-and-more, Apache 2 license
 
 from PIL import Image, ImageDraw, ImageFont
-import icons
 import textwrap
+
+from resources import icons
 
 
 class Drawing(object):

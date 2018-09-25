@@ -6,7 +6,7 @@
 
 
 # WARNING WARNING WARNING
-# comment out the following 2 lines but only if you re-configured the environment variables below
+# - rename run-EDIT-ME.sh to run.sh and comment out the following 2 lines and re-configure the environment variables below
 echo "Please edit and configure this script for your needs"
 exit 1
 
