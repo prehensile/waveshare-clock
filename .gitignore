@@ -1,5 +1,6 @@
 
 *.pyc
+run.sh
 
 # Generated files
 bin/
